@@ -582,7 +582,7 @@
     {
       "name": "bitbucket-pipelines",
       "description": "Bitbucket Pipelines CI/CD manifest schema",
-      "url": "https://bitbucket.org/atlassianlabs/atlascode/raw/main/resources/schemas/pipelines-schema.json",
+      "url": "https://bitbucket.org/atlassianlabs/intellij-bitbucket-references-plugin/raw/master/src/main/resources/schemas/bitbucket-pipelines.schema.json",
       "fileMatch": ["bitbucket-pipelines.yml"]
     },
     {
@@ -966,6 +966,12 @@
       "url": "https://json.schemastore.org/clangd.json"
     },
     {
+      "name": "clib",
+      "description": "C package manager-ish",
+      "fileMatch": ["clib.json"],
+      "url": "https://json.schemastore.org/clib.json"
+    },
+    {
       "name": "cloudify",
       "description": "Cloudify Blueprint",
       "fileMatch": ["*.cfy.yaml"],
@@ -1183,12 +1189,6 @@
       "description": "Component Detection manifest",
       "fileMatch": ["cdmanifest.json", "cgmanifest.json"],
       "url": "https://json.schemastore.org/component-detection-manifest.json"
-    },
-    {
-      "name": "config.json",
-      "description": "ASP.NET project config file",
-      "fileMatch": ["config.json"],
-      "url": "https://json.schemastore.org/config.json"
     },
     {
       "name": "contribute.json",
@@ -1677,6 +1677,12 @@
       "description": "JSON schema for FOSSA CLI's fossa-deps file",
       "fileMatch": ["fossa-deps.yml", "fossa-deps.yaml", "fossa-deps.json"],
       "url": "https://raw.githubusercontent.com/fossas/fossa-cli/master/docs/references/files/fossa-deps.schema.json"
+    },
+    {
+      "name": "Karakum configuration file",
+      "description": "Schema for configuring Karakum, a converter of TypeScript declaration files to Kotlin declarations",
+      "fileMatch": ["karakum.config.json"],
+      "url": "https://raw.githubusercontent.com/karakum-team/karakum/master/schema/karakum-schema.json"
     },
     {
       "name": "Knative Functions - func.yaml",
@@ -2706,6 +2712,12 @@
       "url": "https://meta.open-rpc.org/"
     },
     {
+      "name": "ops.yaml",
+      "description": "Schema for Ops configuration file (ops.yaml)",
+      "fileMatch": ["ops.yml", "ops.yaml"],
+      "url": "https://raw.githubusercontent.com/LeShaunJ/ops-schema/main/ops.schema.json"
+    },
+    {
       "name": "ONe's service descriptor",
       "description": "JSON schema for ONe's service descriptor",
       "fileMatch": ["service-descriptor.yml"],
@@ -3057,6 +3069,12 @@
       "url": "https://json.schemastore.org/rancher-fleet.json"
     },
     {
+      "name": "config.yaml",
+      "description": "Projektor settings",
+      "fileMatch": ["**/.projektor/config.yaml"],
+      "url": "https://json.schemastore.org/projektor.json"
+    },
+    {
       "name": "Read the Docs",
       "description": "Read the Docs configuration file",
       "fileMatch": [
@@ -3272,6 +3290,11 @@
       "url": "https://json.schemastore.org/sarif-2.1.0-rtm.5.json"
     },
     {
+      "name": "sarif-2.1.0-rtm.6",
+      "description": "Static Analysis Results Format (SARIF), Version 2.1.0-rtm.6",
+      "url": "https://json.schemastore.org/sarif-2.1.0-rtm.6.json"
+    },
+    {
       "name": "sarif-external-property-file-2.1.0-rtm.5",
       "description": "Static Analysis Results Format (SARIF) External Property File Format, Version 2.1.0-rtm.5",
       "url": "https://json.schemastore.org/sarif-external-property-file-2.1.0-rtm.5.json"
@@ -3377,6 +3400,12 @@
         "**/branches/.sfdx-hardis.*.yaml"
       ],
       "url": "https://raw.githubusercontent.com/hardisgroupcom/sfdx-hardis/main/config/sfdx-hardis.jsonschema.json"
+    },
+    {
+      "name": "Sigrid scope configuration file",
+      "description": "Analysis scope configuration file used by Sigrid (sigrid-says.com)",
+      "fileMatch": ["sigrid.yaml"],
+      "url": "https://json.schemastore.org/sigrid-scope-file.schema.json"
     },
     {
       "name": "SIL Kit Participant Configuration",
@@ -3619,7 +3648,7 @@
       "name": "tmLanguage",
       "description": "Language grammar description files in Textmate and compatible editors",
       "fileMatch": ["*.tmLanguage.json"],
-      "url": "https://raw.githubusercontent.com/Septh/tmlanguage/master/tmlanguage.json"
+      "url": "https://json.schemastore.org/tmlanguage.json"
     },
     {
       "name": "TestEnvironment.json",
@@ -3655,6 +3684,12 @@
       "description": "Define personal data schema in code using Transcend",
       "fileMatch": ["transcend.yml", "transcend.yaml"],
       "url": "https://raw.githubusercontent.com/transcend-io/cli/main/transcend-yml-schema-v4.json"
+    },
+    {
+      "name": "transcend-pathfinder.yml",
+      "description": "JSON schema for Transcend's Pathfinder, a proxy that intercepts calls to AI tools to enable AI governance",
+      "fileMatch": ["transcend-pathfinder.yml", "transcend-pathfinder.yaml"],
+      "url": "https://raw.githubusercontent.com/transcend-io/cli/main/pathfinder-policy-yml-schema.json"
     },
     {
       "name": "trunk.yaml schema",
@@ -5076,6 +5111,12 @@
       "url": "https://raw.githubusercontent.com/DannyBen/bashly/master/schemas/strings.json"
     },
     {
+      "name": "bpkg",
+      "description": "A lightweight Bash package manager",
+      "fileMatch": ["bpkg.json"],
+      "url": "https://json.schemastore.org/bpkg.json"
+    },
+    {
       "name": "micro-settings.json",
       "description": "Micro settings",
       "fileMatch": ["**/.config/micro/settings.json"],
@@ -5098,6 +5139,30 @@
       "description": "secrethub",
       "fileMatch": ["secrethub.yml", "secrethub.yaml"],
       "url": "https://raw.githubusercontent.com/DannyBen/secret_hub/master/schemas/secrethub.json"
+    },
+    {
+      "name": ".aliases",
+      "description": "Dynamic Bash aliases",
+      "fileMatch": [".aliases"],
+      "url": "https://json.schemastore.org/aliases.json"
+    },
+    {
+      "name": "syntax",
+      "description": "Micro Editor syntaxes",
+      "fileMatch": ["**/micro/runtime/syntax/*.yaml"],
+      "url": "https://json.schemastore.org/micro-syntax.json"
+    },
+    {
+      "name": "lazygit",
+      "description": "Lazy Git settings",
+      "url": "https://json.schemastore.org/lazygit.json",
+      "fileMatch": ["**/lazygit/config.yml"]
+    },
+    {
+      "name": "lazydocker",
+      "description": "Lazy Docker settings",
+      "url": "https://json.schemastore.org/lazydocker.json",
+      "fileMatch": ["**/lazydocker/config.yml"]
     }
   ],
   "version": 1

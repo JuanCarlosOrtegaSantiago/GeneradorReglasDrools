@@ -1,4 +1,5 @@
 ﻿//constantes para reemplazar
+using GeneradorReglasDrools;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -23,6 +24,7 @@ string rango_a_considerar = "@rango_a_considerar";
 string porcentaje = "%_";
 string arroba = "@";
 string divEncabezado = "@divisionDeEncabezado";
+string dias_historia= "@dias_historia";
 
 string anio_ayer = "@anio_ayer";
 string mes_ayer = "@mes_ayer";
@@ -48,6 +50,7 @@ string valor_final_t = "@valor_final_t";
 
 //estructura para obtener datos para concatenar
 string leerEsquema_de_trabajo = "$esquema_trabajo: get(\"params\").get(\"esquema_trabajo\"),\n";
+string leerDias_historia = "$dias_historia: get(\"params\").get(\"dias_historia\"),\n";
 string leerEsquema = "                           $esquema: get(\"params\").get(\"esquema\"),\n";
 string leerFecha = "                           $fecha: get(\"params\").get(\"fecha\"),\n";
 string leerDias_a_procesar = "                           $dias_a_procesar: get(\"params\").get(\"dias_a_procesar\"),\n";
@@ -78,6 +81,7 @@ string leer_valor_final_t = "                            $valor_final_t: get(\"p
 //constantes para concatenar al query
 string concatenarEsquema_trabajo = "\n                $esquema_trabajo";
 string concatenarEsquema = "\n                $esquema";
+string concatenarDias_historia = "\n                $dias_historia";
 string concatenarFecha = "\n                $fecha";
 string concatenarDias_a_procesar = "\n                $dias_a_procesar";
 string concatenarRango_a_considerar = "\n                $rango_a_considerar";
@@ -122,7 +126,7 @@ String FINALqueryConcatenado = "";
 
 Console.WriteLine("Que deceas hacer?\n\t1 - Generar Reglas \n\t2 - Generar querys \n\t3 - Generar Reglas con querys por un archivo .txt\n\t4 - Generar Reglas ejemplo");
 string op=Console.ReadLine();
-
+var j=prop.MiLeyPrincipal;
 switch (op)
 {
     case "1":
@@ -322,12 +326,16 @@ void Prueba()
                 //StringBuilder sb = new StringBuilder();
                 string reglafin = "";
 
-                if (!Arreglo[3].Contains(porcentaje))
+                string typeSQL = getTypeSQL(Arreglo[2]);
+
+
+
+                if (!Arreglo[2].Contains(porcentaje))
                 {
-                    queryConcatenado = GetQueryStringFormat(Arreglo[3], salida, queryfinal);
+                    queryConcatenado = GetQueryStringFormat(Arreglo[2], salida, queryfinal);
                     reglafin = GetReglaFin(queryConcatenado.ToString(), concat);
                    
-                    if (!Arreglo[3].Contains(arroba))
+                    if (!Arreglo[2].Contains(arroba))
                     {
                         reglafin = GetReglaFinSinArroba(queryConcatenado.ToString(), concat);
                     }
@@ -338,13 +346,13 @@ void Prueba()
                 }
                 else
                 {
-                    queryConcatenado = GetQueryNormal(Arreglo[3], salida, queryfinal);
+                    queryConcatenado = GetQueryNormal(Arreglo[2], salida, queryfinal);
 
                         reglafin = GetReglaFin(queryConcatenado.ToString(), null);
                     
                 }
 
-                string regla = GerearRegla(negocio,flujoDeRegla, tipoEncabezado, tipoDeFlujoParaCondicion, Arreglo[0], Arreglo[1], Arreglo[2], reglafin, strucparaLeer);
+                string regla = GerearRegla(negocio,flujoDeRegla, tipoEncabezado, tipoDeFlujoParaCondicion, Arreglo[0], Arreglo[1], typeSQL, reglafin, strucparaLeer);
 
 
                 escri.WriteLine(regla + "\n");
@@ -367,6 +375,41 @@ void Prueba()
         File.Delete(fin);
     }
 
+
+}
+
+string getTypeSQL(string Query)
+{
+    int h = Query.IndexOf(" ");
+    string SQL = Query.Substring(0, h).ToUpper();
+
+    List<string> DML = new List<string>();
+    DML.Add("REFRESH");
+    DML.Add("INSERT");
+    DML.Add("UPDATE");
+    DML.Add("DELETE");
+
+    List<string> DDL = new List<string>();
+    DDL.Add("CREATE");
+    DDL.Add("DROP");
+    DDL.Add("ALTER");
+    DDL.Add("TRUNCATE");
+
+    string ret="";
+
+    if (DML.Contains(SQL))
+    {
+        ret ="DML";
+    }
+    else if (DDL.Contains(SQL))
+    {
+        ret ="DDL";
+    }
+    else
+    {
+        ret = "SELECT";
+    }
+    return ret;
 
 }
 
@@ -751,6 +794,8 @@ string GetQueryStringFormat(string queryentrante, string salida, string queryfin
 
         if (!jj.Contains(consarroba))
         {
+            string k = GetPalabra(queryentrante);
+
 
             if (queryentrante.Contains(esquema_trabajo))
             {
@@ -784,6 +829,13 @@ string GetQueryStringFormat(string queryentrante, string salida, string queryfin
                 queryfinal += queryentrante.Replace(rango_a_considerar, reemplazoDeDatoNormal);
                 concat += concatenarRango_a_considerar;
                 strucparaLeer += strucparaLeer.Contains(leerRango_a_considerar) ? "" : leerRango_a_considerar;
+
+            }
+            if (queryentrante.Contains(dias_historia))
+            {
+                queryfinal += queryentrante.Replace(dias_historia, reemplazoDeDatoNormal);
+                concat += concatenarDias_historia;
+                strucparaLeer += strucparaLeer.Contains(leerDias_historia) ? "" : leerDias_historia;
 
             }
 
@@ -939,7 +991,11 @@ string GetQueryStringFormat(string queryentrante, string salida, string queryfin
 
             return queryfinal;
         }
+        
         string buscar = queryentrante.Substring(0, fir2 + primerencuentro + 1);
+
+        string n = GetPalabra(buscar);
+
 
         if (buscar.Contains(esquema_trabajo))
         {
@@ -981,6 +1037,15 @@ string GetQueryStringFormat(string queryentrante, string salida, string queryfin
             salida = queryentrante.Substring(buscar.Length);
             concat += concatenarRango_a_considerar + ",";
             strucparaLeer += strucparaLeer.Contains(leerRango_a_considerar) ? "" : leerRango_a_considerar;
+            return GetQueryStringFormat(salida, salida, queryfinal);
+        }
+
+        if (buscar.Contains(dias_historia))
+        {
+            queryfinal += buscar.Replace(dias_historia, reemplazoDeDatoNormal);
+            salida = queryentrante.Substring(buscar.Length);
+            concat += concatenarDias_historia + ",";
+            strucparaLeer += strucparaLeer.Contains(leerDias_historia) ? "" : leerDias_historia;
             return GetQueryStringFormat(salida, salida, queryfinal);
         }
 
@@ -1160,7 +1225,41 @@ string GetQueryStringFormat(string queryentrante, string salida, string queryfin
 
 }
 
-    string GetQuery(string queryentrante, string salida, string queryfinal)
+string GetPalabra(string queryentrante)
+{
+    int prim = queryentrante.IndexOf("@");
+    string g=queryentrante.Substring(prim);
+
+    int[] valores = new int[3]; 
+
+    valores[0]=g.IndexOf(" ");
+    valores[1] = g.IndexOf(".");
+    valores[2] = g.IndexOf(")");
+
+    List<string> param= new List<string>();
+
+    foreach (var item in valores)
+    {
+        if (item >= 0)
+        {
+            param.Add(queryentrante.Substring(prim, item));
+        }
+    }
+    string parametrofinal = "";
+    foreach (var parametro in param)
+    {
+        if (Const.parametros.Contains(parametro))
+        {
+            parametrofinal=parametro;
+        }
+    }
+
+    Console.WriteLine("=> {0} <=", parametrofinal);
+
+    return parametrofinal;
+}
+
+string GetQuery(string queryentrante, string salida, string queryfinal)
     {
         bool existefecha = queryentrante.Contains(fecha);
         bool existediasaprocesar = queryentrante.Contains(dias_a_procesar);
