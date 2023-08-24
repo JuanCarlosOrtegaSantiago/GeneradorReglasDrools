@@ -8,13 +8,8 @@ namespace GeneradorReglasDrools
 {
     internal class Const
     {
-        public static List<string> parametros => new List<string>{"@fecha",
-"@dias_a_procesar",
-"@esquema",
-"@esquema_trabajo",
-"@rango_a_considerar",
-"@fecha_ini",
-"@fecha_fin" };
+        public static List<string> parametros => new List<string>{"@fecha","@dias_a_procesar","@esquema","@esquema_trabajo",
+            "@rango_a_considerar","@fecha_ini","@fecha_fin","@dias_historia" };
 
         public string TypeDBLocal => "Local";
 
