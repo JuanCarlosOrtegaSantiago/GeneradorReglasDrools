@@ -21,7 +21,7 @@ string dias_a_procesar = "@dias_a_procesar";
 string esquema = "@esquema.";
 string esquema_trabajo = "@esquema_trabajo.";
 string rango_a_considerar = "@rango_a_considerar";
-string porcentaje = "%_";
+string porcentaje = "%";
 string arroba = "@";
 string divEncabezado = "@divisionDeEncabezado";
 string dias_historia= "@dias_historia";
@@ -440,6 +440,28 @@ string GetQueryNormal(string queryentrante, string salida, string queryfinal)
 
         if (!jj.Contains(consarroba))
         {
+
+            string k = GetPalabra(queryentrante);
+            string typeRempl = "";
+            if (k.Contains("fecha"))
+            {
+                typeRempl = reemplazoDeFecha;
+            }
+            //else if (k.Contains("esquema"))
+            //{
+            //    typeRem = reemplazoDeEsquemaEsquema_trabajo;
+            //}
+            else
+            {
+                typeRempl = reemplazoDeDatoNormal;
+            }
+
+            string loa = leerParam.Replace("parametro", k.Substring(1));
+
+            queryfinal += queryentrante.Replace(k, typeRempl);
+            concat += concatenarParametro.Replace("parametro", k.Substring(1));
+            strucparaLeer += strucparaLeer.Contains(loa) ? "" : loa;
+
 
             if (queryentrante.Contains(esquema_trabajo))
             {
@@ -1280,11 +1302,12 @@ string GetPalabra(string queryentrante)
     int prim = queryentrante.IndexOf("@");
     string g=queryentrante.Substring(prim);
 
-    int[] valores = new int[3]; 
+    int[] valores = new int[4]; 
 
     valores[0]=g.IndexOf(" ");
     valores[1] = g.IndexOf(".");
     valores[2] = g.IndexOf(")");
+    valores[3] = g.IndexOf(",");
 
     List<string> param= new List<string>();
 
