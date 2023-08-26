@@ -1,5 +1,6 @@
 ﻿//constantes para reemplazar
 using GeneradorReglasDrools;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -11,7 +12,6 @@ string reemplazarTipoDeFlujoParaCondicion = "*tipoDeFlujoParaCondicion";
 string reemplazarTipoNegocio = "*tipoNegocio";
 
 //constantes para realizar reemplazo
-string reemplazoDeEsquemaEsquema_trabajo = "%s.";
 string reemplazoDeDatoNormal = "%s";
 string reemplazoDeFecha = "'%s'";
 
@@ -20,95 +20,15 @@ string fecha = "@fecha";
 string dias_a_procesar = "@dias_a_procesar";
 string esquema = "@esquema.";
 string esquema_trabajo = "@esquema_trabajo.";
-string rango_a_considerar = "@rango_a_considerar";
 string porcentaje = "%";
 string arroba = "@";
 string divEncabezado = "@divisionDeEncabezado";
-string dias_historia= "@dias_historia";
 
-string anio_ayer = "@anio_ayer";
-string mes_ayer = "@mes_ayer";
-string dia_ayer = "@dia_ayer";
-string anio_semana_ant = "@anio_semana_ant";
-string mes_semana_ant = "@mes_semana_ant";
-string dia_semana_ant = "@dia_semana_ant";
-string anio_mes_ant = "@anio_mes_ant";
-string mes_mes_ant = "@mes_mes_ant";
-string dia_mes_ant = "@dia_mes_ant";
-string fecha_ayer = "@fechAyer";
-string fecha_ejecucion = "@fechejecucion";
-string fecha_semana = "@fechsemana";
-string fecha_mes = "@fechmes";
-string primera_fecha = "@primera_fech";
-string ultimo_dia= "@ultimo_dia";
-string num_acceso = "@num_acceso";
-string num_transporte = "@num_transporte";
-string valor_inicial_a = "@valor_inicial_a";
-string valor_final_a = "@valor_final_a";
-string valor_inicial_t = "@valor_inicial_t";
-string valor_final_t = "@valor_final_t";
 
 //estructura para obtener datos para concatenar
 string leerParam = "                           $parametro: get(\"params\").get(\"parametro\"),\n";
-string leerEsquema_de_trabajo = "$esquema_trabajo: get(\"params\").get(\"esquema_trabajo\"),\n";
-string leerDias_historia = "$dias_historia: get(\"params\").get(\"dias_historia\"),\n";
-string leerEsquema = "                           $esquema: get(\"params\").get(\"esquema\"),\n";
-string leerFecha = "                           $fecha: get(\"params\").get(\"fecha\"),\n";
-string leerDias_a_procesar = "                           $dias_a_procesar: get(\"params\").get(\"dias_a_procesar\"),\n";
-string leerRango_a_considerar = "                           $rango_a_considerar: get(\"params\").get(\"rango_a_considerar\"),\n";
-
-string leer_anio_ayer = "                            $anio_ayer: get(\"params\").get(\"anio_ayer\"),\n";
-string leer_mes_ayer = "                            $mes_ayer: get(\"params\").get(\"mes_ayer\"),\n";
-string leer_dia_ayer = "                            $dia_ayer: get(\"params\").get(\"dia_ayer\"),\n";
-string leer_anio_semana_ant = "                            $anio_semana_ant: get(\"params\").get(\"anio_semana_ant\"),\n";
-string leer_mes_semana_ant = "                            $mes_semana_ant: get(\"params\").get(\"mes_semana_ant\"),\n";
-string leer_dia_semana_ant = "                            $dia_semana_ant: get(\"params\").get(\"dia_semana_ant\"),\n";
-string leer_anio_mes_ant = "                            $anio_mes_ant: get(\"params\").get(\"anio_mes_ant\"),\n";
-string leer_mes_mes_ant = "                            $mes_mes_ant: get(\"params\").get(\"mes_mes_ant\"),\n";
-string leer_dia_mes_ant = "                            $dia_mes_ant: get(\"params\").get(\"dia_mes_ant\"),\n";
-string leer_fecha_ayer = "                            $fecha_ayer: get(\"params\").get(\"fecha_ayer\"),\n";
-string leer_fecha_ejecucion = "                            $fecha_ejecucion: get(\"params\").get(\"fecha_ejecucion\"),\n";
-string leer_fecha_semana = "                            $fecha_semana: get(\"params\").get(\"fecha_semana\"),\n";
-string leer_fecha_mes = "                            $fecha_mes: get(\"params\").get(\"fecha_mes\"),\n";
-string leer_primera_fecha = "                            $primera_fecha: get(\"params\").get(\"primera_fecha\"),\n";
-string leer_ultimo_dia = "                            $ultimo_dia: get(\"params\").get(\"ultimo_dia\"),\n";
-string leer_num_acceso = "                            $num_acceso: get(\"params\").get(\"num_acceso\"),\n";
-string leer_num_transporte = "                            $num_transporte: get(\"params\").get(\"num_transporte\"),\n";
-string leer_valor_inicial_a = "                            $valor_inicial_a: get(\"params\").get(\"valor_inicial_a\"),\n";
-string leer_valor_final_a = "                            $valor_final_a: get(\"params\").get(\"valor_final_a\"),\n";
-string leer_valor_inicial_t = "                            $valor_inicial_t: get(\"params\").get(\"valor_inicial_t\"),\n";
-string leer_valor_final_t = "                            $valor_final_t: get(\"params\").get(\"valor_final_t\"),\n";
-
 //constantes para concatenar al query
 string concatenarParametro = "\n                $parametro";
-string concatenarEsquema_trabajo = "\n                $esquema_trabajo";
-string concatenarEsquema = "\n                $esquema";
-string concatenarDias_historia = "\n                $dias_historia";
-string concatenarFecha = "\n                $fecha";
-string concatenarDias_a_procesar = "\n                $dias_a_procesar";
-string concatenarRango_a_considerar = "\n                $rango_a_considerar";
-
-string concatenaranio_ayer = "\n                $anio_ayer";
-string concatenarmes_ayer = "\n                $mes_ayer";
-string concatenardia_ayer = "\n                $dia_ayer";
-string concatenaranio_semana_ant = "\n                $anio_semana_ant";
-string concatenarmes_semana_ant = "\n                $mes_semana_ant";
-string concatenardia_semana_ant = "\n                $dia_semana_ant";
-string concatenaranio_mes_ant = "\n                $anio_mes_ant";
-string concatenarmes_mes_ant = "\n                $mes_mes_ant";
-string concatenardia_mes_ant = "\n                $dia_mes_ant";
-string concatenarfecha_ayer = "\n                $fecha_ayer";
-string concatenarfecha_ejecucion = "\n                $fecha_ejecucion";
-string concatenarfecha_semana = "\n                $fecha_semana";
-string concatenarfecha_mes = "\n                $fecha_mes";
-string concatenarprimera_fecha = "\n                $primera_fecha";
-string concatenarultimo_dia = "\n                $ultimo_dia";
-string concatenarnum_acceso = "\n                $num_acceso";
-string concatenarnum_transporte = "\n                $num_transporte";
-string concatenarvalor_inicial_a = "\n                $valor_inicial_a";
-string concatenarvalor_final_a = "\n                $valor_final_a";
-string concatenarvalor_inicial_t = "\n                $valor_inicial_t";
-string concatenarvalor_final_t = "\n                $valor_final_t";
 
 //variables a ocupar
 string consarroba = "@";
@@ -121,10 +41,6 @@ int contesquemadeporcentajes = 0;
 
 //String divvisor de encabezados
 string DivisorDeEncavezados = "\n//#################################################################################################################################################\r\n//################################################### @divisionDeEncabezado #########################################################################\r\n//#################################################################################################################################################\n\n\n";
-
-
-String FINALqueryConcatenado = "";
-
 
 Console.WriteLine("Que deceas hacer?\n\t1 - Generar Reglas \n\t2 - Generar querys \n\t3 - Generar Reglas con querys por un archivo .txt\n\t4 - Generar Reglas ejemplo");
 string op=Console.ReadLine();
@@ -436,357 +352,50 @@ string GetQueryNormal(string queryentrante, string salida, string queryfinal)
         string jj = salidaj.Substring(1);
         int fir2 = jj.IndexOf(consarroba);
 
-
-
         if (!jj.Contains(consarroba))
         {
 
-            string k = GetPalabra(queryentrante);
-            string typeRempl = "";
-            if (k.Contains("fecha"))
-            {
-                typeRempl = reemplazoDeFecha;
-            }
-            //else if (k.Contains("esquema"))
+            string parametro = GetPalabra(queryentrante);
+            if (parametro.Length < 1)
+                return "";
+
+            string lectura = leerParam.Replace("parametro", parametro.Substring(1));
+            string remplazo = parametro.Contains("fecha")? string.Format("'\" + ${0} + \"'", parametro.Substring(1)): string.Format("\" + ${0} + \"", parametro.Substring(1));
+            
+            queryfinal = queryentrante.Replace(parametro, remplazo);
+            strucparaLeer += strucparaLeer.Contains(lectura) ? "" : lectura;
+
+            //if (queryentrante.Contains(esquema_trabajo))
             //{
-            //    typeRem = reemplazoDeEsquemaEsquema_trabajo;
+            //    queryfinal = queryentrante.Replace(esquema_trabajo, "\"" + " + $esquema_trabajo + " + "\".");
+            //    strucparaLeer+=strucparaLeer.Contains(leerEsquema_de_trabajo)? "": leerEsquema_de_trabajo;
             //}
-            else
-            {
-                typeRempl = reemplazoDeDatoNormal;
-            }
-
-            string loa = leerParam.Replace("parametro", k.Substring(1));
-
-            queryfinal += queryentrante.Replace(k, typeRempl);
-            concat += concatenarParametro.Replace("parametro", k.Substring(1));
-            strucparaLeer += strucparaLeer.Contains(loa) ? "" : loa;
-
-
-            if (queryentrante.Contains(esquema_trabajo))
-            {
-                queryfinal = queryentrante.Replace(esquema_trabajo, "\"" + " + $esquema_trabajo + " + "\".");
-                strucparaLeer+=strucparaLeer.Contains(leerEsquema_de_trabajo)? "": leerEsquema_de_trabajo;
-            }
-            if (queryentrante.Contains(esquema))
-            {
-                queryfinal = queryentrante.Replace(esquema, "\"" + " + $esquema + " + "\".");
-                strucparaLeer += strucparaLeer.Contains(leerEsquema) ? "" : leerEsquema;
-            }
-            if (queryentrante.Contains(fecha))
-            {
-                queryfinal = queryentrante.Replace(fecha, "'\"" + " + $fecha + " + "\"'");
-                strucparaLeer += strucparaLeer.Contains(leerFecha) ? "" : leerFecha;
-            }
-            if (queryentrante.Contains(dias_a_procesar))
-            {
-                queryfinal = queryentrante.Replace(dias_a_procesar, "\"" + " + $dias_a_procesar + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leerDias_a_procesar) ? "" : leerDias_a_procesar;
-            }
-            if (queryentrante.Contains(rango_a_considerar))
-            {
-                queryfinal = queryentrante.Replace(rango_a_considerar, "\"" + " + $rango_a_considerar + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leerRango_a_considerar) ? "" : leerRango_a_considerar;
-            }
-            //--------------------------------------------------------------------------------------------
-            if (queryentrante.Contains(anio_ayer))
-            {
-                queryfinal = queryentrante.Replace(anio_ayer, "\"" + " + $anio_ayer + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_anio_ayer) ? "" : leer_anio_ayer;
-            }
-            if (queryentrante.Contains(mes_ayer))
-            {
-                queryfinal = queryentrante.Replace(mes_ayer, "\"" + " + $mes_ayer + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_mes_ayer) ? "" : leer_mes_ayer;
-            }
-            if (queryentrante.Contains(dia_ayer))
-            {
-                queryfinal = queryentrante.Replace(dia_ayer, "\"" + " + $dia_ayer + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_dia_ayer) ? "" : leer_dia_ayer;
-            }
-            if (queryentrante.Contains(anio_semana_ant))
-            {
-                queryfinal = queryentrante.Replace(anio_semana_ant, "\"" + " + $anio_semana_ant + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_anio_semana_ant) ? "" : leer_anio_semana_ant;
-            }
-            if (queryentrante.Contains(mes_semana_ant))
-            {
-                queryfinal = queryentrante.Replace(mes_semana_ant, "\"" + " + $mes_semana_ant + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_mes_semana_ant) ? "" : leer_mes_semana_ant;
-            }
-            if (queryentrante.Contains(dia_semana_ant))
-            {
-                queryfinal = queryentrante.Replace(dia_semana_ant, "\"" + " + $dia_semana_ant + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_dia_semana_ant) ? "" : leer_dia_semana_ant;
-            }
-            if (queryentrante.Contains(anio_mes_ant))
-            {
-                queryfinal = queryentrante.Replace(anio_mes_ant, "\"" + " + $anio_mes_ant + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_anio_mes_ant) ? "" : leer_anio_mes_ant;
-            }
-            if (queryentrante.Contains(mes_mes_ant))
-            {
-                queryfinal = queryentrante.Replace(mes_mes_ant, "\"" + " + $mes_mes_ant + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_mes_mes_ant) ? "" : leer_mes_mes_ant;
-            }
-            if (queryentrante.Contains(dia_mes_ant))
-            {
-                queryfinal = queryentrante.Replace(dia_mes_ant, "\"" + " + $dia_mes_ant + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_dia_mes_ant) ? "" : leer_dia_mes_ant;
-            }
-            if (queryentrante.Contains(fecha_ayer))
-            {
-                queryfinal = queryentrante.Replace(fecha_ayer, "\"" + " + $fecha_ayer + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_fecha_ayer) ? "" : leer_fecha_ayer;
-            }
-            if (queryentrante.Contains(fecha_ejecucion))
-            {
-                queryfinal = queryentrante.Replace(fecha_ejecucion, "\"" + " + $fecha_ejecucion + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_fecha_ejecucion) ? "" : leer_fecha_ejecucion;
-            }
-            if (queryentrante.Contains(fecha_semana))
-            {
-                queryfinal = queryentrante.Replace(fecha_semana, "\"" + " + $fecha_semana + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_fecha_semana) ? "" : leer_fecha_semana;
-            }
-            if (queryentrante.Contains(fecha_mes))
-            {
-                queryfinal = queryentrante.Replace(fecha_mes, "\"" + " + $fecha_mes + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_fecha_mes) ? "" : leer_fecha_mes;
-            }
-            if (queryentrante.Contains(primera_fecha))
-            {
-                queryfinal = queryentrante.Replace(primera_fecha, "\"" + " + $primera_fecha + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_primera_fecha) ? "" : leer_primera_fecha;
-            }
-            if (queryentrante.Contains(ultimo_dia))
-            {
-                queryfinal = queryentrante.Replace(ultimo_dia, "\"" + " + $ultimo_dia + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_ultimo_dia) ? "" : leer_ultimo_dia;
-            }
-            if (queryentrante.Contains(num_acceso))
-            {
-                queryfinal = queryentrante.Replace(num_acceso, "\"" + " + $num_acceso + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_num_acceso) ? "" : leer_num_acceso;
-            }
-            if (queryentrante.Contains(num_transporte))
-            {
-                queryfinal = queryentrante.Replace(num_transporte, "\"" + " + $num_transporte + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_num_transporte) ? "" : leer_num_transporte;
-            }
-            if (queryentrante.Contains(valor_inicial_a))
-            {
-                queryfinal = queryentrante.Replace(valor_inicial_a, "\"" + " + $valor_inicial_a + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_valor_inicial_a) ? "" : leer_valor_inicial_a;
-            }
-            if (queryentrante.Contains(valor_final_a))
-            {
-                queryfinal = queryentrante.Replace(valor_final_a, "\"" + " + $valor_final_a + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_valor_final_a) ? "" : leer_valor_final_a;
-            }
-            if (queryentrante.Contains(valor_inicial_t))
-            {
-                queryfinal = queryentrante.Replace(valor_inicial_t, "\"" + " + $valor_inicial_t + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_valor_inicial_t) ? "" : leer_valor_inicial_t;
-            }
-            if (queryentrante.Contains(valor_final_t))
-            {
-                queryfinal = queryentrante.Replace(valor_final_t, "\"" + " + $valor_final_t + " + "\"");
-                strucparaLeer += strucparaLeer.Contains(leer_valor_final_t) ? "" : leer_valor_final_t;
-            }
-
+            
             return queryfinal;
         }
+        
         string buscar = queryentrante.Substring(0, fir2 + first + 1);
         string restodequery = queryentrante.Substring(buscar.Length);
 
-        if (buscar.Contains(esquema_trabajo))
-        {
-            queryfinal = buscar.Replace(esquema_trabajo, "\""+ " + $esquema_trabajo + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leerEsquema_de_trabajo) ? "" : leerEsquema_de_trabajo;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(esquema))
-        {
+        string k = GetPalabra(buscar);
+        if (k.Length < 1)
+            return "";
 
-            queryfinal = buscar.Replace(esquema, "\"" + " + $esquema + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leerEsquema) ? "" : leerEsquema;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(fecha))
-        {
+        string loa = leerParam.Replace("parametro", k.Substring(1));
+        string remplace = k.Contains("fecha")? string.Format("'\" + ${0} + \"'", k.Substring(1)): string.Format("\" + ${0} + \"", k.Substring(1));
+                
+        queryfinal = buscar.Replace(k, remplace);
+        strucparaLeer += strucparaLeer.Contains(loa) ? "" : loa;
+        queryfinal += restodequery;
+        return GetQueryNormal(queryfinal, salida, queryfinal);
 
-            queryfinal = buscar.Replace(fecha, "'\"" + " + $fecha + " + "\"'");
-            strucparaLeer += strucparaLeer.Contains(leerFecha) ? "" : leerFecha;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(dias_a_procesar))
-        {
-            queryfinal = buscar.Replace(dias_a_procesar, "\"" + " + $dias_a_procesar + " + "\"");
-            strucparaLeer += strucparaLeer.Contains(leerDias_a_procesar) ? "" : leerDias_a_procesar;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(rango_a_considerar))
-        {
-            queryfinal = queryentrante.Replace(rango_a_considerar, "\"" + " + $rango_a_considerar + " + "\"");
-            strucparaLeer += strucparaLeer.Contains(leerRango_a_considerar) ? "" : leerRango_a_considerar;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-
-        //-----------------------------------------------------------------------------------------------------
-
-        if (buscar.Contains(anio_ayer))
-        {
-            queryfinal = buscar.Replace(anio_ayer, "\"" + " + $anio_ayer + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_anio_ayer) ? "" : leer_anio_ayer;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(mes_ayer))
-        {
-            queryfinal = buscar.Replace(mes_ayer, "\"" + " + $mes_ayer + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_mes_ayer) ? "" : leer_mes_ayer;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(dia_ayer))
-        {
-            queryfinal = buscar.Replace(dia_ayer, "\"" + " + $dia_ayer + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_dia_ayer) ? "" : leer_dia_ayer;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(anio_semana_ant))
-        {
-            queryfinal = buscar.Replace(anio_semana_ant, "\"" + " + $anio_semana_ant + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_anio_semana_ant) ? "" : leer_anio_semana_ant;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(mes_semana_ant))
-        {
-            queryfinal = buscar.Replace(mes_semana_ant, "\"" + " + $mes_semana_ant + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_mes_semana_ant) ? "" : leer_mes_semana_ant;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(dia_semana_ant))
-        {
-            queryfinal = buscar.Replace(dia_semana_ant, "\"" + " + $dia_semana_ant + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_dia_semana_ant) ? "" : leer_dia_semana_ant;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(anio_mes_ant))
-        {
-            queryfinal = buscar.Replace(anio_mes_ant, "\"" + " + $anio_mes_ant + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_anio_mes_ant) ? "" : leer_anio_mes_ant;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(mes_mes_ant))
-        {
-            queryfinal = buscar.Replace(mes_mes_ant, "\"" + " + $mes_mes_ant + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_mes_mes_ant) ? "" : leer_mes_mes_ant;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(dia_mes_ant))
-        {
-            queryfinal = buscar.Replace(dia_mes_ant, "\"" + " + $dia_mes_ant + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_dia_mes_ant) ? "" : leer_dia_mes_ant;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(fecha_ayer))
-        {
-            queryfinal = buscar.Replace(fecha_ayer, "\"" + " + $fecha_ayer + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_fecha_ayer) ? "" : leer_fecha_ayer;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(fecha_ejecucion))
-        {
-            queryfinal = buscar.Replace(fecha_ejecucion, "\"" + " + $fecha_ejecucion + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_fecha_ejecucion) ? "" : leer_fecha_ejecucion;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(fecha_semana))
-        {
-            queryfinal = buscar.Replace(fecha_semana, "\"" + " + $fecha_semana + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_fecha_semana) ? "" : leer_fecha_semana;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(fecha_mes))
-        {
-            queryfinal = buscar.Replace(fecha_mes, "\"" + " + $fecha_mes + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_fecha_mes) ? "" : leer_fecha_mes;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(primera_fecha))
-        {
-            queryfinal = buscar.Replace(primera_fecha, "\"" + " + $primera_fecha + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_primera_fecha) ? "" : leer_primera_fecha;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(ultimo_dia))
-        {
-            queryfinal = buscar.Replace(ultimo_dia, "\"" + " + $ultimo_dia + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_ultimo_dia) ? "" : leer_ultimo_dia;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(num_acceso))
-        {
-            queryfinal = buscar.Replace(num_acceso, "\"" + " + $num_acceso + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_num_acceso) ? "" : leer_num_acceso;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(num_transporte))
-        {
-            queryfinal = buscar.Replace(num_transporte, "\"" + " + $num_transporte + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_num_transporte) ? "" : leer_num_transporte;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(valor_inicial_a))
-        {
-            queryfinal = buscar.Replace(valor_inicial_a, "\"" + " + $valor_inicial_a + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_valor_inicial_a) ? "" : leer_valor_inicial_a;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(valor_final_a))
-        {
-            queryfinal = buscar.Replace(valor_final_a, "\"" + " + $valor_final_a + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_valor_final_a) ? "" : leer_valor_final_a;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(valor_inicial_t))
-        {
-            queryfinal = buscar.Replace(valor_inicial_t, "\"" + " + $valor_inicial_t + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_valor_inicial_t) ? "" : leer_valor_inicial_t;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
-        if (buscar.Contains(valor_final_t))
-        {
-            queryfinal = buscar.Replace(valor_final_t, "\"" + " + $valor_final_t + " + "\".");
-            strucparaLeer += strucparaLeer.Contains(leer_valor_final_t) ? "" : leer_valor_final_t;
-            queryfinal += restodequery;
-            return GetQueryNormal(queryfinal, salida, queryfinal);
-        }
+        //if (buscar.Contains(esquema_trabajo))
+        //{
+            //queryfinal = buscar.Replace(esquema_trabajo, "\""+ " + $esquema_trabajo + " + "\".");
+        //    strucparaLeer += strucparaLeer.Contains(leerEsquema_de_trabajo) ? "" : leerEsquema_de_trabajo;
+        //    queryfinal += restodequery;
+        //    return GetQueryNormal(queryfinal, salida, queryfinal);
+        //}
 
     }
     return queryfinal;
@@ -819,19 +428,11 @@ string GetQueryStringFormat(string queryentrante, string salida, string queryfin
         if (!jj.Contains(consarroba))
         {
             string k = GetPalabra(queryentrante);
-            string typeRempl = "";
-            if (k.Contains("fecha"))
-            {
-                typeRempl = reemplazoDeFecha;
-            }
-            //else if (k.Contains("esquema"))
-            //{
-            //    typeRem = reemplazoDeEsquemaEsquema_trabajo;
-            //}
-            else
-            {
-                typeRempl = reemplazoDeDatoNormal;
-            }
+            if (k.Length < 1)
+                return "";
+
+            string typeRempl = k.Contains("fecha")? reemplazoDeFecha:reemplazoDeDatoNormal;
+            
 
             string loa=leerParam.Replace("parametro", k.Substring(1));
 
@@ -846,191 +447,7 @@ string GetQueryStringFormat(string queryentrante, string salida, string queryfin
             //    concat += concatenarEsquema_trabajo;
             //    strucparaLeer += strucparaLeer.Contains(leerEsquema_de_trabajo) ? "" : leerEsquema_de_trabajo;
             //}
-            //if (queryentrante.Contains(esquema))
-            //{
-            //    queryfinal += queryentrante.Replace(esquema, reemplazoDeEsquemaEsquema_trabajo);
-            //    concat += concatenarEsquema;
-            //    strucparaLeer += strucparaLeer.Contains(leerEsquema) ? "" : leerEsquema;
-
-            //}
-            //if (queryentrante.Contains(fecha))
-            //{
-            //    queryfinal += queryentrante.Replace(fecha, reemplazoDeFecha);
-            //    concat += concatenarFecha;
-            //    strucparaLeer += strucparaLeer.Contains(leerFecha) ? "" : leerFecha;
-
-            //}
-            //if (queryentrante.Contains(dias_a_procesar))
-            //{
-            //    queryfinal += queryentrante.Replace(dias_a_procesar, reemplazoDeDatoNormal);
-            //    concat += concatenarDias_a_procesar;
-            //    strucparaLeer += strucparaLeer.Contains(leerDias_a_procesar) ? "" : leerDias_a_procesar;
-
-            //}
-            //if (queryentrante.Contains(rango_a_considerar))
-            //{
-            //    queryfinal += queryentrante.Replace(rango_a_considerar, reemplazoDeDatoNormal);
-            //    concat += concatenarRango_a_considerar;
-            //    strucparaLeer += strucparaLeer.Contains(leerRango_a_considerar) ? "" : leerRango_a_considerar;
-
-            //}
-            //if (queryentrante.Contains(dias_historia))
-            //{
-            //    queryfinal += queryentrante.Replace(dias_historia, reemplazoDeDatoNormal);
-            //    concat += concatenarDias_historia;
-            //    strucparaLeer += strucparaLeer.Contains(leerDias_historia) ? "" : leerDias_historia;
-
-            //}
-
-            ////------------------------------------------------------------------------------------------------------
-
-            //if (queryentrante.Contains(anio_ayer))
-            //{
-            //    queryfinal += queryentrante.Replace(anio_ayer, reemplazoDeFecha);
-            //    concat += concatenaranio_ayer;
-            //    strucparaLeer += strucparaLeer.Contains(leer_anio_ayer) ? "" : leer_anio_ayer;
-
-            //}
-            //if (queryentrante.Contains(mes_ayer))
-            //{
-            //    queryfinal += queryentrante.Replace(mes_ayer, reemplazoDeFecha);
-            //    concat += concatenarmes_ayer;
-            //    strucparaLeer += strucparaLeer.Contains(leer_mes_ayer) ? "" : leer_mes_ayer;
-
-            //}
-            //if (queryentrante.Contains(dia_ayer))
-            //{
-            //    queryfinal += queryentrante.Replace(dia_ayer, reemplazoDeFecha);
-            //    concat += concatenardia_ayer;
-            //    strucparaLeer += strucparaLeer.Contains(leer_dia_ayer) ? "" : leer_dia_ayer;
-
-            //}
-            //if (queryentrante.Contains(anio_semana_ant))
-            //{
-            //    queryfinal += queryentrante.Replace(anio_semana_ant, reemplazoDeFecha);
-            //    concat += concatenaranio_semana_ant;
-            //    strucparaLeer += strucparaLeer.Contains(leer_anio_semana_ant) ? "" : leer_anio_semana_ant;
-
-            //}
-            //if (queryentrante.Contains(mes_semana_ant))
-            //{
-            //    queryfinal += queryentrante.Replace(mes_semana_ant, reemplazoDeFecha);
-            //    concat += concatenarmes_semana_ant;
-            //    strucparaLeer += strucparaLeer.Contains(leer_mes_semana_ant) ? "" : leer_mes_semana_ant;
-
-            //}
-            //if (queryentrante.Contains(dia_semana_ant))
-            //{
-            //    queryfinal += queryentrante.Replace(dia_semana_ant, reemplazoDeFecha);
-            //    concat += concatenardia_semana_ant;
-            //    strucparaLeer += strucparaLeer.Contains(leer_dia_semana_ant) ? "" : leer_dia_semana_ant;
-
-            //}
-            //if (queryentrante.Contains(anio_mes_ant))
-            //{
-            //    queryfinal += queryentrante.Replace(anio_mes_ant, reemplazoDeFecha);
-            //    concat += concatenaranio_mes_ant;
-            //    strucparaLeer += strucparaLeer.Contains(leer_anio_mes_ant) ? "" : leer_anio_mes_ant;
-
-            //}
-            //if (queryentrante.Contains(mes_mes_ant))
-            //{
-            //    queryfinal += queryentrante.Replace(mes_mes_ant, reemplazoDeFecha);
-            //    concat += concatenarmes_mes_ant;
-            //    strucparaLeer += strucparaLeer.Contains(leer_mes_mes_ant) ? "" : leer_mes_mes_ant;
-
-            //}
-            //if (queryentrante.Contains(dia_mes_ant))
-            //{
-            //    queryfinal += queryentrante.Replace(dia_mes_ant, reemplazoDeFecha);
-            //    concat += concatenardia_mes_ant;
-            //    strucparaLeer += strucparaLeer.Contains(leer_dia_mes_ant) ? "" : leer_dia_mes_ant;
-
-            //}
-            //if (queryentrante.Contains(fecha_ayer))
-            //{
-            //    queryfinal += queryentrante.Replace(fecha_ayer, reemplazoDeFecha);
-            //    concat += concatenarfecha_ayer;
-            //    strucparaLeer += strucparaLeer.Contains(leer_fecha_ayer) ? "" : leer_fecha_ayer;
-
-            //}
-            //if (queryentrante.Contains(fecha_ejecucion))
-            //{
-            //    queryfinal += queryentrante.Replace(fecha_ejecucion, reemplazoDeFecha);
-            //    concat += concatenarfecha_ejecucion;
-            //    strucparaLeer += strucparaLeer.Contains(leer_fecha_ejecucion) ? "" : leer_fecha_ejecucion;
-
-            //}
-            //if (queryentrante.Contains(fecha_semana))
-            //{
-            //    queryfinal += queryentrante.Replace(fecha_semana, reemplazoDeFecha);
-            //    concat += concatenarfecha_semana;
-            //    strucparaLeer += strucparaLeer.Contains(leer_fecha_semana) ? "" : leer_fecha_semana;
-
-            //}
-            //if (queryentrante.Contains(fecha_mes))
-            //{
-            //    queryfinal += queryentrante.Replace(fecha_mes, reemplazoDeFecha);
-            //    concat += concatenarfecha_mes;
-            //    strucparaLeer += strucparaLeer.Contains(leer_fecha_mes) ? "" : leer_fecha_mes;
-
-            //}
-            //if (queryentrante.Contains(primera_fecha))
-            //{
-            //    queryfinal += queryentrante.Replace(primera_fecha, reemplazoDeFecha);
-            //    concat += concatenarprimera_fecha;
-            //    strucparaLeer += strucparaLeer.Contains(leer_primera_fecha) ? "" : leer_primera_fecha;
-
-            //}
-            //if (queryentrante.Contains(ultimo_dia))
-            //{
-            //    queryfinal += queryentrante.Replace(ultimo_dia, reemplazoDeFecha);
-            //    concat += concatenarultimo_dia;
-            //    strucparaLeer += strucparaLeer.Contains(leer_ultimo_dia) ? "" : leer_ultimo_dia;
-
-            //}
-            //if (queryentrante.Contains(num_acceso))
-            //{
-            //    queryfinal += queryentrante.Replace(num_acceso, reemplazoDeDatoNormal);
-            //    concat += concatenarnum_acceso;
-            //    strucparaLeer += strucparaLeer.Contains(leer_num_acceso) ? "" : leer_num_acceso;
-
-            //}
-            //if (queryentrante.Contains(num_transporte))
-            //{
-            //    queryfinal += queryentrante.Replace(num_transporte, reemplazoDeDatoNormal);
-            //    concat += concatenarnum_transporte;
-            //    strucparaLeer += strucparaLeer.Contains(leer_num_transporte) ? "" : leer_num_transporte;
-
-            //}
-            //if (queryentrante.Contains(valor_inicial_a))
-            //{
-            //    queryfinal += queryentrante.Replace(valor_inicial_a, reemplazoDeDatoNormal);
-            //    concat += concatenarvalor_inicial_a;
-            //    strucparaLeer += strucparaLeer.Contains(leer_valor_inicial_a) ? "" : leer_valor_inicial_a;
-
-            //}
-            //if (queryentrante.Contains(valor_final_a))
-            //{
-            //    queryfinal += queryentrante.Replace(valor_final_a, reemplazoDeDatoNormal);
-            //    concat += concatenarvalor_final_a;
-            //    strucparaLeer += strucparaLeer.Contains(leer_valor_final_a) ? "" : leer_valor_final_a;
-
-            //}
-            //if (queryentrante.Contains(valor_inicial_t))
-            //{
-            //    queryfinal += queryentrante.Replace(valor_inicial_t, reemplazoDeDatoNormal);
-            //    concat += concatenarvalor_inicial_t;
-            //    strucparaLeer += strucparaLeer.Contains(leer_valor_inicial_t) ? "" : leer_valor_inicial_t;
-
-            //}
-            //if (queryentrante.Contains(valor_final_t))
-            //{
-            //    queryfinal += queryentrante.Replace(valor_final_t, reemplazoDeDatoNormal);
-            //    concat += concatenarvalor_final_t;
-            //    strucparaLeer += strucparaLeer.Contains(leer_valor_final_t) ? "" : leer_valor_final_t;
-
-            //}
+            
 
             return queryfinal;
         }
@@ -1040,25 +457,10 @@ string GetQueryStringFormat(string queryentrante, string salida, string queryfin
         string n = GetPalabra(buscar);
 
         if (n.Length < 1)
-        {
-            
             return "";
-        }
-
-        string typeRem = "";
-        if (n.Contains("fecha"))
-        {
-            typeRem = reemplazoDeFecha;
-        }
-        //else if (k.Contains("esquema"))
-        //{
-        //    typeRem = reemplazoDeEsquemaEsquema_trabajo;
-        //}
-        else
-        {
-            typeRem = reemplazoDeDatoNormal;
-        }
-
+        
+        string typeRem = n.Contains("fecha")? reemplazoDeFecha: reemplazoDeDatoNormal;
+        
         string lo = leerParam.Replace("parametro", n.Substring(1));
 
         queryfinal += buscar.Replace(n, typeRem);
@@ -1069,221 +471,6 @@ string GetQueryStringFormat(string queryentrante, string salida, string queryfin
         return GetQueryStringFormat(salida, salida, queryfinal);
 
 
-        //if (buscar.Contains(esquema_trabajo))
-        //{
-        //    queryfinal += buscar.Replace(esquema_trabajo, reemplazoDeEsquemaEsquema_trabajo);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarEsquema_trabajo + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leerEsquema_de_trabajo) ? "" : leerEsquema_de_trabajo;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(esquema))
-        //{
-        //    queryfinal += buscar.Replace(esquema, reemplazoDeEsquemaEsquema_trabajo);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarEsquema + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leerEsquema) ? "" : leerEsquema;
-
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(fecha))
-        //{
-        //    queryfinal += buscar.Replace(fecha, reemplazoDeFecha);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarFecha + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leerFecha) ? "" : leerFecha;
-
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(dias_a_procesar))
-        //{
-        //    queryfinal += buscar.Replace(dias_a_procesar, reemplazoDeDatoNormal);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarDias_a_procesar + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leerDias_a_procesar) ? "" : leerDias_a_procesar;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(rango_a_considerar))
-        //{
-        //    queryfinal += buscar.Replace(rango_a_considerar, reemplazoDeDatoNormal);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarRango_a_considerar + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leerRango_a_considerar) ? "" : leerRango_a_considerar;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-
-        //if (buscar.Contains(dias_historia))
-        //{
-        //    queryfinal += buscar.Replace(dias_historia, reemplazoDeDatoNormal);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarDias_historia + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leerDias_historia) ? "" : leerDias_historia;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-
-        ////----------------------------------------------------------------------------------------------------
-
-        //if (buscar.Contains(anio_ayer))
-        //{
-        //    queryfinal += buscar.Replace(anio_ayer, reemplazoDeFecha);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenaranio_ayer + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_anio_ayer) ? "" : leer_anio_ayer;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(mes_ayer))
-        //{
-        //    queryfinal += buscar.Replace(mes_ayer, reemplazoDeFecha);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarmes_ayer + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_mes_ayer) ? "" : leer_mes_ayer;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(dia_ayer))
-        //{
-        //    queryfinal += buscar.Replace(dia_ayer, reemplazoDeFecha);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenardia_ayer + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_dia_ayer) ? "" : leer_dia_ayer;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(anio_semana_ant))
-        //{
-        //    queryfinal += buscar.Replace(anio_semana_ant, reemplazoDeFecha);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenaranio_semana_ant + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_anio_semana_ant) ? "" : leer_anio_semana_ant;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(mes_semana_ant))
-        //{
-        //    queryfinal += buscar.Replace(mes_semana_ant, reemplazoDeFecha);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarmes_semana_ant + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_mes_semana_ant) ? "" : leer_mes_semana_ant;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(dia_semana_ant))
-        //{
-        //    queryfinal += buscar.Replace(dia_semana_ant, reemplazoDeFecha);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenardia_semana_ant + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_dia_semana_ant) ? "" : leer_dia_semana_ant;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(anio_mes_ant))
-        //{
-        //    queryfinal += buscar.Replace(anio_mes_ant, reemplazoDeFecha);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenaranio_mes_ant + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_anio_mes_ant) ? "" : leer_anio_mes_ant;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(mes_mes_ant))
-        //{
-        //    queryfinal += buscar.Replace(mes_mes_ant, reemplazoDeFecha);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarmes_mes_ant + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_mes_mes_ant) ? "" : leer_mes_mes_ant;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(dia_mes_ant))
-        //{
-        //    queryfinal += buscar.Replace(dia_mes_ant, reemplazoDeFecha);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenardia_mes_ant + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_dia_mes_ant) ? "" : leer_dia_mes_ant;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(fecha_ayer))
-        //{
-        //    queryfinal += buscar.Replace(fecha_ayer, reemplazoDeFecha);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarfecha_ayer + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_fecha_ayer) ? "" : leer_fecha_ayer;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(fecha_ejecucion))
-        //{
-        //    queryfinal += buscar.Replace(fecha_ejecucion, reemplazoDeFecha);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarfecha_ejecucion + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_fecha_ejecucion) ? "" : leer_fecha_ejecucion;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(fecha_semana))
-        //{
-        //    queryfinal += buscar.Replace(fecha_semana, reemplazoDeFecha);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarfecha_semana + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_fecha_semana) ? "" : leer_fecha_semana;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(fecha_mes))
-        //{
-        //    queryfinal += buscar.Replace(fecha_mes, reemplazoDeFecha);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarfecha_mes + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_fecha_mes) ? "" : leer_fecha_mes;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(primera_fecha))
-        //{
-        //    queryfinal += buscar.Replace(primera_fecha, reemplazoDeFecha);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarprimera_fecha + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_primera_fecha) ? "" : leer_primera_fecha;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(ultimo_dia))
-        //{
-        //    queryfinal += buscar.Replace(ultimo_dia, reemplazoDeFecha);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarultimo_dia + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_ultimo_dia) ? "" : leer_ultimo_dia;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(num_acceso))
-        //{
-        //    queryfinal += buscar.Replace(num_acceso, reemplazoDeDatoNormal);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarnum_acceso + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_num_acceso) ? "" : leer_num_acceso;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(num_transporte))
-        //{
-        //    queryfinal += buscar.Replace(num_transporte, reemplazoDeDatoNormal);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarnum_transporte + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_num_transporte) ? "" : leer_num_transporte;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(valor_inicial_a))
-        //{
-        //    queryfinal += buscar.Replace(valor_inicial_a, reemplazoDeDatoNormal);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarvalor_inicial_a + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_valor_inicial_a) ? "" : leer_valor_inicial_a;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(valor_final_a))
-        //{
-        //    queryfinal += buscar.Replace(valor_final_a, reemplazoDeDatoNormal);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarvalor_final_a + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_valor_final_a) ? "" : leer_valor_final_a;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(valor_inicial_t))
-        //{
-        //    queryfinal += buscar.Replace(valor_inicial_t, reemplazoDeDatoNormal);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarvalor_inicial_t + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_valor_inicial_t) ? "" : leer_valor_inicial_t;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
-        //if (buscar.Contains(valor_final_t))
         //{
         //    queryfinal += buscar.Replace(valor_final_t, reemplazoDeDatoNormal);
         //    salida = queryentrante.Substring(buscar.Length);
@@ -1324,6 +511,7 @@ string GetPalabra(string queryentrante)
         if (Const.parametros.Contains(parametro))
         {
             parametrofinal=parametro;
+            break;
         }
     }
     if (!(parametrofinal.Length > 1))
