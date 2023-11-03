@@ -1,8 +1,6 @@
 ﻿//constantes para reemplazar
 using GeneradorReglasDrools;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 string reemplazarTipoEncabezado = "*tipoEncabezado";
 string reemplazarSubStep = "*subStep";
@@ -16,10 +14,7 @@ string reemplazoDeDatoNormal = "%s";
 string reemplazoDeFecha = "'%s'";
 
 //parametros a buscar
-string fecha = "@fecha";
-string dias_a_procesar = "@dias_a_procesar";
-string esquema = "@esquema.";
-string esquema_trabajo = "@esquema_trabajo.";
+
 string porcentaje = "%";
 string arroba = "@";
 string divEncabezado = "@divisionDeEncabezado";
@@ -34,35 +29,35 @@ string concatenarParametro = "\n                $parametro";
 string consarroba = "@";
 string concat = "";
 string strucparaLeer = "";
-int contfechas = 0;
-int contdiasaprocesar = 0;
-int contesquemas = 0;
-int contesquemadeporcentajes = 0;
 
 //String divvisor de encabezados
 string DivisorDeEncavezados = "\n//#################################################################################################################################################\r\n//################################################### @divisionDeEncabezado #########################################################################\r\n//#################################################################################################################################################\n\n\n";
-
-Console.WriteLine("Que deceas hacer?\n\t1 - Generar Reglas \n\t2 - Generar querys \n\t3 - Generar Reglas con querys por un archivo .txt\n\t4 - Generar Reglas ejemplo");
-string op=Console.ReadLine();
-var j=prop.MiLeyPrincipal;
-switch (op)
+string salir = "N";
+do
 {
-    case "1":
-        generadorDeReglas();
-        break;
-    case "2":
-        generadorDeQuerys();
-        break;
-    case "3":
-        Prueba();
-        break;
-    case "4":
-        Prueba2();
-        break;
-    default:
+    Console.Clear();
+    Console.WriteLine("Que deceas hacer [Y - salir]?\n\t1 - Generar Reglas\n\t2 - Generar Reglas con querys por un archivo .txt\n\t3 - Generar Reglas ejemplo");
+    string op = Console.ReadLine().ToUpper();
+    var j = prop.MiLeyPrincipal;
+    switch (op)
+    {
+        case "1":
+            generadorDeReglas();
+            break;
+        case "2":
+            Prueba();
+            break;
+        case "3":
+            Prueba2();
+            break;
+        case "Y":
+            salir = "Y";
+            break;
+        default:
 
-        break;
-}
+            break;
+    }
+} while (!salir.Equals("Y"));
 
 
 void Prueba2()
@@ -144,7 +139,7 @@ void Prueba2()
                             reglafin = GetReglaFin(queryConcatenado.ToString(), null);
                         }
 
-                        string regla = GerearRegla("",flujoDeRegla, tipoEncabezado, tipoDeFlujoParaCondicion, Arreglo[0], Arreglo[1], Arreglo[2], reglafin, strucparaLeer);
+                        string regla = GerearRegla("",flujoDeRegla, tipoEncabezado, tipoDeFlujoParaCondicion, Arreglo[0], Arreglo[1], Arreglo[2], reglafin, strucparaLeer).Replace("\n", "\n    ");
 
 
                         escri.WriteLine(regla + "\n");
@@ -182,16 +177,31 @@ void Prueba()
 
     Console.Write("Ingresa el nombre del archivo NOTA sin el  \".txt\":  ");
     string archivo = Console.ReadLine();
-    string tipoEncabezado = archivo;
+    string tipoEncabezado = archivo.ToUpper();
     
     archivo += ".txt";
 
     Console.Write("Ingresa la ruta: sonde se leera el .txt:  ");
     string ruta = Console.ReadLine();
 
-    Console.Clear();
-    Console.Write("Escribe el tipo de flujo para la diferenciar el nombre de la regla  :");
-    string flujoDeRegla = Console.ReadLine();
+    string path = ruta.Replace(@"\\", @"\");
+    path += @"\" + archivo;
+
+    try
+    {
+        StreamReader sr = new StreamReader(@path);
+        sr.Close();
+    }
+    catch (Exception ex)
+    {
+
+        Console.WriteLine("No se encontro el archivo \nException:" + ex.Message);
+        Console.ReadKey();
+        return;
+    }
+
+    //Console.Write("Escribe el tipo de flujo para la diferenciar el nombre de la regla  :");
+    //string flujoDeRegla = Console.ReadLine();
     //string tipoDeFlujoParaCondicion;//= Console.ReadLine();
 
     //tipoDeFlujoParaCondicion = flujoDeRegla;
@@ -199,36 +209,37 @@ void Prueba()
     //Console.Clear();
     //Console.Write("Escribe el nombre para diferenciar encabezado de la regla:");
     //string tipoEncabezado = Console.ReadLine();
-    tipoEncabezado = tipoEncabezado.ToUpper();
 
     Console.Clear();
-    Console.Write("Escribe el tipo de flujo para la condicion d ela regla \"Equipos o Interfaces\":");
+    Console.Write("Tipo de flujo \"(Equipos | Interfaces)\"... :");
     string tipoDeFlujoParaCondicion = Console.ReadLine();
+    string flujoDeRegla = tipoDeFlujoParaCondicion;
 
-    Console.Clear();
-    Console.Write("Escribe el NOMBR DEL NEGOCIO  :");
+    Console.Write("Nombre del nogocio... :");
     string negocio = Console.ReadLine();
 
-
-
     Console.Clear();
+    Console.Write("Tipo de archivo ( YML | DRL)... :");
+    string typeArchive = Console.ReadLine().ToUpper();
 
-
-    string path = ruta.Replace(@"\\", @"\");
-    path += @"\" + archivo;
     string fin = ruta + @"\" + flujoDeRegla + "_" + tipoEncabezado + ".txt";
-
 
 
     try
     {
     Console.Write("Leyendo archivo . . . .");
-    Thread.Sleep(2500);
+    Thread.Sleep(1500);
     Console.Clear();
 
         using (StreamWriter escri = File.CreateText(fin))
         {
-            escri.WriteLine(DivisorDeEncavezados.Replace(divEncabezado, tipoEncabezado));
+
+            string encabezado = DivisorDeEncavezados.Replace(divEncabezado, tipoEncabezado);
+
+            if (typeArchive.Equals("YML"))
+                encabezado= encabezado.Replace("\n", "\n    ");
+
+            escri.WriteLine(encabezado);
 
             Console.Write("Creando archivo ");
             Thread.Sleep(1000);
@@ -241,7 +252,6 @@ void Prueba()
                 concat = "";
                 strucparaLeer = "";
                 string queryConcatenado = "";
-                //StringBuilder sb = new StringBuilder();
                 string reglafin = "";
 
                 string typeSQL = getTypeSQL(Arreglo[2]);
@@ -272,8 +282,10 @@ void Prueba()
 
                 string regla = GerearRegla(negocio,flujoDeRegla, tipoEncabezado, tipoDeFlujoParaCondicion, Arreglo[0], Arreglo[1], typeSQL, reglafin, strucparaLeer);
 
+                if (typeArchive.Equals("YML"))
+                    regla = regla.Replace("\n", "\n    ");
 
-                escri.WriteLine(regla + "\n");
+                escri.WriteLine(regla);
                 Console.Write(". ");
                 Thread.Sleep(450);
 
@@ -283,13 +295,14 @@ void Prueba()
         }
 
         Console.Write("\n\nArchivo creado con exito . . .\n\r\r\tRUTA DEL ARCHIVO: " + fin);
-        
+        Process.Start(new ProcessStartInfo { FileName = @fin, UseShellExecute = true });
         Thread.Sleep(5000);
     }
     catch (Exception ex)
     {
         Console.Clear();
         Console.Write("No se pudo leer/encontrar el archivo: \nMensaje:\t" + ex.Message);
+        Console.ReadKey();
         File.Delete(fin);
     }
 
@@ -301,31 +314,24 @@ string getTypeSQL(string Query)
     int h = Query.IndexOf(" ");
     string SQL = Query.Substring(0, h).ToUpper();
 
-    List<string> DML = new List<string>();
-    DML.Add("REFRESH");
-    DML.Add("INSERT");
-    DML.Add("UPDATE");
-    DML.Add("DELETE");
-
-    List<string> DDL = new List<string>();
-    DDL.Add("CREATE");
-    DDL.Add("DROP");
-    DDL.Add("ALTER");
-    DDL.Add("TRUNCATE");
 
     string ret="";
 
-    if (DML.Contains(SQL))
+    if (Const.DML.Contains(SQL))
     {
-        ret ="DML";
+        ret =nameof(Const.DML);
     }
-    else if (DDL.Contains(SQL))
+    else if (Const.DDL.Contains(SQL))
     {
-        ret ="DDL";
+        ret = nameof(Const.DDL);
+    }
+    else if(Const.SELECT.Contains(SQL))
+    {
+        ret = nameof(Const.SELECT);
     }
     else
     {
-        ret = "SELECT";
+        ret = "SQL";
     }
     return ret;
 
@@ -364,12 +370,6 @@ string GetQueryNormal(string queryentrante, string salida, string queryfinal)
             
             queryfinal = queryentrante.Replace(parametro, remplazo);
             strucparaLeer += strucparaLeer.Contains(lectura) ? "" : lectura;
-
-            //if (queryentrante.Contains(esquema_trabajo))
-            //{
-            //    queryfinal = queryentrante.Replace(esquema_trabajo, "\"" + " + $esquema_trabajo + " + "\".");
-            //    strucparaLeer+=strucparaLeer.Contains(leerEsquema_de_trabajo)? "": leerEsquema_de_trabajo;
-            //}
             
             return queryfinal;
         }
@@ -389,31 +389,11 @@ string GetQueryNormal(string queryentrante, string salida, string queryfinal)
         queryfinal += restodequery;
         return GetQueryNormal(queryfinal, salida, queryfinal);
 
-        //if (buscar.Contains(esquema_trabajo))
-        //{
-            //queryfinal = buscar.Replace(esquema_trabajo, "\""+ " + $esquema_trabajo + " + "\".");
-        //    strucparaLeer += strucparaLeer.Contains(leerEsquema_de_trabajo) ? "" : leerEsquema_de_trabajo;
-        //    queryfinal += restodequery;
-        //    return GetQueryNormal(queryfinal, salida, queryfinal);
-        //}
-
     }
     return queryfinal;
 
 }
 
-void generadorDeQuerys()
-{
-    foreach (string line in System.IO.File.ReadLines(@"c:\j\jj.txt"))
-    {
-        string salida = "";
-        string queryfinal = "";
-        concat = "";
-
-        string queryConcatenado = GetQuery(line, salida, queryfinal);
-        string regla = "                //Se Define Query\r\n                String Query = String.format(\"" + queryConcatenado + "\",\r                " + concat + ");";
-    }
-}
 string GetQueryStringFormat(string queryentrante, string salida, string queryfinal)
 {
     if (queryentrante.Contains(consarroba))
@@ -440,15 +420,6 @@ string GetQueryStringFormat(string queryentrante, string salida, string queryfin
                 concat += concatenarParametro.Replace("parametro", k.Substring(1));
                 strucparaLeer += strucparaLeer.Contains(loa) ? "" : loa;
             
-
-            //if (queryentrante.Contains(esquema_trabajo))
-            //{
-            //    queryfinal += queryentrante.Replace(esquema_trabajo, reemplazoDeEsquemaEsquema_trabajo);
-            //    concat += concatenarEsquema_trabajo;
-            //    strucparaLeer += strucparaLeer.Contains(leerEsquema_de_trabajo) ? "" : leerEsquema_de_trabajo;
-            //}
-            
-
             return queryfinal;
         }
         
@@ -470,14 +441,6 @@ string GetQueryStringFormat(string queryentrante, string salida, string queryfin
 
         return GetQueryStringFormat(salida, salida, queryfinal);
 
-
-        //{
-        //    queryfinal += buscar.Replace(valor_final_t, reemplazoDeDatoNormal);
-        //    salida = queryentrante.Substring(buscar.Length);
-        //    concat += concatenarvalor_final_t + ",";
-        //    strucparaLeer += strucparaLeer.Contains(leer_valor_final_t) ? "" : leer_valor_final_t;
-        //    return GetQueryStringFormat(salida, salida, queryfinal);
-        //}
     }
 
     return queryentrante.Contains(consarroba)?queryfinal:queryentrante;
@@ -524,99 +487,16 @@ string GetPalabra(string queryentrante)
     return parametrofinal;
 }
 
-string GetQuery(string queryentrante, string salida, string queryfinal)
-    {
-        bool existefecha = queryentrante.Contains(fecha);
-        bool existediasaprocesar = queryentrante.Contains(dias_a_procesar);
-        bool existeesquema = queryentrante.Contains(esquema);
-        bool existeEsquemadetrabajo = queryentrante.Contains(esquema_trabajo);
-
-
-        bool existeprocentaje = queryentrante.Contains(porcentaje);
-
-        if (!existeprocentaje)
-        {
-
-
-            //salida = queryentrante.Replace(esquema_trabajo, "%s");
-            if (existeEsquemadetrabajo)
-            {
-                int first = queryentrante.IndexOf(esquema_trabajo) + esquema_trabajo.Length;
-                salida = queryentrante.Substring(first);
-
-                queryfinal += queryentrante.Substring(0, first);
-                queryfinal = queryfinal.Replace(esquema_trabajo, "%s.");
-                contesquemadeporcentajes += 1;
-                return GetQuery(salida, salida, queryfinal);
-
-            }
-
-            if (existeesquema)
-            {
-                int first = queryentrante.IndexOf(esquema) + esquema.Length;
-                salida = queryentrante.Substring(first);
-
-                queryfinal += queryentrante.Substring(0, first);
-                queryfinal = queryfinal.Replace(esquema, "%s.");
-                contesquemas += 1;
-                return GetQuery(salida, salida, queryfinal);
-            }
-
-
-            if (existefecha)
-            {
-                int first = queryentrante.IndexOf(fecha) + fecha.Length;
-                salida = queryentrante.Substring(first);
-
-                queryfinal += queryentrante.Substring(0, first);
-                queryfinal = queryfinal.Replace(fecha, "'%s'");
-                contfechas += 1;
-                return GetQuery(salida, salida, queryfinal);
-            }
-
-            if (existediasaprocesar)
-            {
-                int first = queryentrante.IndexOf(dias_a_procesar) + dias_a_procesar.Length;
-                salida = queryentrante.Substring(first);
-
-                queryfinal += queryentrante.Substring(0, first);
-                queryfinal = queryfinal.Replace(dias_a_procesar, "%s");
-                contdiasaprocesar += 1;
-                return GetQuery(salida, salida, queryfinal);
-            }
-        }
-
-
-
-        if (existefecha || existeesquema || existeEsquemadetrabajo || existediasaprocesar)
-        {
-            return GetQuery(salida, salida, queryfinal);
-        }
-        else
-        {
-            if (salida.Length > 0)
-            {
-                queryfinal += salida;
-            }
-            return queryfinal;
-        }
-
-
-    }
-
     void generadorDeReglas()
     {
 
-
-
-        string valorEnrada;
+        string valorEnrada="N";
         do
         {
-
-            Console.WriteLine("ingresa los Step y SubStep como se muestra en el siguiente ejemplo (Step-SubStep|SubStep): 1-1.1|1.2|1.3");
-            valorEnrada = Console.ReadLine();
-            if (valorEnrada != null && valorEnrada != "sa")
-            {
+        Console.Clear();
+            Console.WriteLine("ingresa los Step y SubStep como se muestra en el siguiente ejemplo \"1-1.1|1.2|1.3\" [Y - SALIR]");
+            valorEnrada = Console.ReadLine().ToUpper();
+            
                 try
                 {
                     string Step;
@@ -624,57 +504,44 @@ string GetQuery(string queryentrante, string salida, string queryfinal)
                     Step = GetStep(valorEnrada);
                     ArregloSteps = GetSubStepsPorPartes(GetSubSteps(valorEnrada));
 
-
                     foreach (var item in ArregloSteps)
                     {
-                        string regla = GerearRegla("","", "", "", Step, item, "", "", "");
-                        Console.WriteLine(regla + "\n");
+
+                        Console.WriteLine(GerearRegla("", "", "", "", Step, item, "", "", "") + "\n");
 
                     }
-
 
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Intenta de nuevo");
+                    Console.WriteLine("Intenta de nuevo Error:"+ex.Message);
                     Console.ReadKey();
                     Console.Clear();
 
                 }
-            }
-            else
-            {
-                break;
-            }
-        } while (valorEnrada != "sa");
+            
+        } while (valorEnrada != "Y");
     }
 
     string GerearRegla(string Negocio,string flujoDeRegla, string tipoEncabezado, string tipoDeFlujoParaCondicion, string step, string subStep, string typeSql, string reglafin, string strucparaLeer)
     {
         string regla = "";
-        string encambezado = "//*********************************************** PASO *step - Sub *subStep - *tipoEncabezado ***********************************************";
-        encambezado = encambezado.Replace(reemplazarStep, step);
-        encambezado = encambezado.Replace(reemplazarSubStep, subStep);
-        encambezado = encambezado.Replace(reemplazarTipoEncabezado, tipoEncabezado);
-
+        string encambezado = "\n//*********************************************** PASO *step - Sub *subStep - *tipoEncabezado ***********************************************"
+        .Replace(reemplazarStep, step).Replace(reemplazarSubStep, subStep).Replace(reemplazarTipoEncabezado, tipoEncabezado);
         regla += encambezado + "\n\n";
 
-
         string sub = subStep.Replace('.', '_');
-        string inicio = "rule \"*flujoDeRegla-Step*step-SubStep*subStep\"\r\nagenda-group \"*tipoNegocio\"";
-        inicio = inicio.Replace(reemplazarTipoNegocio,Negocio);
-        inicio = inicio.Replace(reemplazarStep, step);
-        inicio = inicio.Replace(reemplazarSubStep, sub);
-        inicio = inicio.Replace(reemplazarFlujoDeRegla, flujoDeRegla);
-
-
+        string inicio = "rule \"*flujoDeRegla-Step*step-SubStep*subStep\"\r\nagenda-group \"*tipoNegocio\""
+        .Replace(reemplazarTipoNegocio, Negocio)
+        .Replace(reemplazarStep, step)
+        .Replace(reemplazarSubStep, sub)
+        .Replace(reemplazarFlujoDeRegla, flujoDeRegla);
         regla += inicio + "\n";
 
-        string condicion = "\twhen\r\n\t\tr: HashMap(" + strucparaLeer + "\n\t\t\t\tget(\"type\") == (\"*tipoDeFlujoParaCondicion\") && \r\n\t\t\t\tget(\"step\") == \"*step\" && \r\n\t\t\t\tget(\"subStep\") == \"*subStep\")\r\n\tthen\t";
-        condicion = condicion.Replace(reemplazarStep, step);
-        condicion = condicion.Replace(reemplazarSubStep, subStep);
-        condicion = condicion.Replace(reemplazarTipoDeFlujoParaCondicion, tipoDeFlujoParaCondicion);
-
+        string condicion = "\twhen\r\n\t\tr: HashMap(" + strucparaLeer + "\n\t\t\t\tget(\"type\") == (\"*tipoDeFlujoParaCondicion\") && \r\n\t\t\t\tget(\"step\") == \"*step\" && \r\n\t\t\t\tget(\"subStep\") == \"*subStep\")\r\n\tthen\t"
+        .Replace(reemplazarStep, step)
+        .Replace(reemplazarSubStep, subStep)
+        .Replace(reemplazarTipoDeFlujoParaCondicion, tipoDeFlujoParaCondicion);
         regla += condicion + "\n\n";
 
         string salida = reglafin + "\r\n\t\t\r\n\t\t//Mapa de salida\r\n\t\toutParams.put(\"type\",\"" + typeSql + "\");\r\n\t\toutParams.put(\"sql\",Query);";

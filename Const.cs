@@ -11,7 +11,11 @@ namespace GeneradorReglasDrools
         public static List<string> parametros => new List<string>{"@fecha","@dias_a_procesar","@esquema","@esquema_trabajo",
             "@rango_a_considerar","@fecha_ini","@fecha_fin","@dias_historia" };
 
-        public string TypeDBLocal => "Local";
+        public static List<string> DML => new List<string>{ "REFRESH","INSERT","UPDATE","DELETE" };
+
+        public static List<string> DDL => new List<string>{ "CREATE" ,"DROP" ,"ALTER" ,"TRUNCATE" };
+
+        public static List<string> SELECT => new List<string> { "COMPUTE" };
 
     }
 }
