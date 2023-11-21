@@ -14,14 +14,13 @@ string reemplazoDeDatoNormal = "%s";
 string reemplazoDeFecha = "'%s'";
 
 //parametros a buscar
-
 string porcentaje = "%";
 string arroba = "@";
 string divEncabezado = "@divisionDeEncabezado";
 
-
 //estructura para obtener datos para concatenar
 string leerParam = "                           $parametro: get(\"params\").get(\"parametro\"),\n";
+
 //constantes para concatenar al query
 string concatenarParametro = "\n                $parametro";
 
@@ -36,7 +35,7 @@ string salir = "N";
 do
 {
     Console.Clear();
-    Console.WriteLine("Que deceas hacer [Y - salir]?\n\t1 - Generar Reglas\n\t2 - Generar Reglas con querys por un archivo .txt\n\t3 - Generar Reglas ejemplo");
+    Console.WriteLine("Que deceas hacer [Y - salir]?\n\t1 - Generar Reglas\n\t2 - Generar Reglas con querys por un archivo .txt\n\t3 - Generar Reglas ejemplo\n\t4 - GenerarKPIS");
     string op = Console.ReadLine().ToUpper();
     var j = prop.MiLeyPrincipal;
     switch (op)
@@ -50,6 +49,9 @@ do
         case "3":
             Prueba2();
             break;
+        case "4":
+            KPISQuery();
+            break;
         case "Y":
             salir = "Y";
             break;
@@ -59,6 +61,26 @@ do
     }
 } while (!salir.Equals("Y"));
 
+void KPISQuery()
+{
+    Console.WriteLine("Ingresa el numero de steps - :");
+    string num = Console.ReadLine();
+    try
+    {
+
+        for (int i = 0; i < int.Parse(num); i++)
+        {
+            Console.WriteLine( GetKPISQuery(i));
+        }
+        Console.ReadKey();
+    }
+    catch (Exception)
+    {
+
+        throw;
+    }
+
+}
 
 void Prueba2()
 {
@@ -181,7 +203,7 @@ void Prueba()
     
     archivo += ".txt";
 
-    Console.Write("Ingresa la ruta: sonde se leera el .txt:  ");
+    Console.Write("ruta a obtener archivo:  ");
     string ruta = Console.ReadLine();
 
     string path = ruta.Replace(@"\\", @"\");
@@ -245,49 +267,66 @@ void Prueba()
             Thread.Sleep(1000);
             foreach (string line in System.IO.File.ReadLines(@path))
             {
-                string[] Arreglo = GetSubStepsPorPartes(line);
-
-                string salida = "";
-                string queryfinal = "";
-                concat = "";
-                strucparaLeer = "";
-                string queryConcatenado = "";
-                string reglafin = "";
-
-                string typeSQL = getTypeSQL(Arreglo[2]);
-
-
-
-                if (!Arreglo[2].Contains(porcentaje))
+                try
                 {
-                    queryConcatenado = GetQueryStringFormat(Arreglo[2], salida, queryfinal);
-                    reglafin = GetReglaFin(queryConcatenado.ToString(), concat);
-                   
-                    if (!Arreglo[2].Contains(arroba))
+                    string[] Arreglo = GetSubStepsPorPartes(line);
+
+                    if (line.Contains("--"))
                     {
-                        reglafin = GetReglaFinSinArroba(queryConcatenado.ToString(), concat);
+                        //break;
+                        throw new InvalidOperationException(string.Format("hay comentarios en el paso {0}-{1}... favor de eliminarlos", Arreglo[0], Arreglo[1]));
+                    }
+
+                    string salida = "";
+                    string queryfinal = "";
+                    concat = "";
+                    strucparaLeer = "";
+                    string queryConcatenado = "";
+                    string reglafin = "";
+
+                    string typeSQL = getTypeSQL(Arreglo[2]);
+
+
+
+                    if (!Arreglo[2].Contains(porcentaje))
+                    {
+                        queryConcatenado = GetQueryStringFormat(Arreglo[2], salida, queryfinal);
+                        reglafin = GetReglaFin(queryConcatenado.ToString(), concat);
+
+                        if (!Arreglo[2].Contains(arroba))
+                        {
+                            reglafin = GetReglaFinSinArroba(queryConcatenado.ToString(), concat);
+                        }
+                        else
+                        {
+                            reglafin = GetReglaFin(queryConcatenado.ToString(), concat);
+                        }
                     }
                     else
                     {
-                        reglafin = GetReglaFin(queryConcatenado.ToString(), concat);
-                    }
-                }
-                else
-                {
-                    queryConcatenado = GetQueryNormal(Arreglo[2], salida, queryfinal);
+                        queryConcatenado = GetQueryNormal(Arreglo[2], salida, queryfinal);
 
                         reglafin = GetReglaFin(queryConcatenado.ToString(), null);
-                    
+
+                    }
+
+                    string regla = GerearRegla(negocio, flujoDeRegla, tipoEncabezado, tipoDeFlujoParaCondicion, Arreglo[0], Arreglo[1], typeSQL, reglafin, strucparaLeer);
+
+                    if (typeArchive.Equals("YML"))
+                        regla = regla.Replace("\n", "\n    ");
+
+                    escri.WriteLine(regla);
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("\nError -> "+ex.Message);
+                }
+                finally
+                {
 
-                string regla = GerearRegla(negocio,flujoDeRegla, tipoEncabezado, tipoDeFlujoParaCondicion, Arreglo[0], Arreglo[1], typeSQL, reglafin, strucparaLeer);
-
-                if (typeArchive.Equals("YML"))
-                    regla = regla.Replace("\n", "\n    ");
-
-                escri.WriteLine(regla);
-                Console.Write(". ");
-                Thread.Sleep(450);
+                    Console.Write(". ");
+                    Thread.Sleep(450);
+                }
 
 
             }
@@ -295,13 +334,14 @@ void Prueba()
         }
 
         Console.Write("\n\nArchivo creado con exito . . .\n\r\r\tRUTA DEL ARCHIVO: " + fin);
+        Console.ReadKey();
         Process.Start(new ProcessStartInfo { FileName = @fin, UseShellExecute = true });
-        Thread.Sleep(5000);
+        Thread.Sleep(500);
     }
     catch (Exception ex)
     {
         Console.Clear();
-        Console.Write("No se pudo leer/encontrar el archivo: \nMensaje:\t" + ex.Message);
+        Console.Write("Error:\t->:  " + ex.Message);
         Console.ReadKey();
         File.Delete(fin);
     }
@@ -366,8 +406,9 @@ string GetQueryNormal(string queryentrante, string salida, string queryfinal)
                 return "";
 
             string lectura = leerParam.Replace("parametro", parametro.Substring(1));
-            string remplazo = parametro.Contains("fecha")? string.Format("'\" + ${0} + \"'", parametro.Substring(1)): string.Format("\" + ${0} + \"", parametro.Substring(1));
-            
+            //string remplazo = parametro.Contains("fecha")? string.Format("'\" + ${0} + \"'", parametro.Substring(1)): string.Format("\" + ${0} + \"", parametro.Substring(1));
+            string remplazo = Const.parametrosFecha.Contains(parametro) ? string.Format("'\" + ${0} + \"'", parametro.Substring(1)): string.Format("\" + ${0} + \"", parametro.Substring(1));
+
             queryfinal = queryentrante.Replace(parametro, remplazo);
             strucparaLeer += strucparaLeer.Contains(lectura) ? "" : lectura;
             
@@ -382,7 +423,7 @@ string GetQueryNormal(string queryentrante, string salida, string queryfinal)
             return "";
 
         string loa = leerParam.Replace("parametro", k.Substring(1));
-        string remplace = k.Contains("fecha")? string.Format("'\" + ${0} + \"'", k.Substring(1)): string.Format("\" + ${0} + \"", k.Substring(1));
+        string remplace = Const.parametrosFecha.Contains(k) ? string.Format("'\" + ${0} + \"'", k.Substring(1)): string.Format("\" + ${0} + \"", k.Substring(1));
                 
         queryfinal = buscar.Replace(k, remplace);
         strucparaLeer += strucparaLeer.Contains(loa) ? "" : loa;
@@ -410,9 +451,8 @@ string GetQueryStringFormat(string queryentrante, string salida, string queryfin
             string k = GetPalabra(queryentrante);
             if (k.Length < 1)
                 return "";
-
-            string typeRempl = k.Contains("fecha")? reemplazoDeFecha:reemplazoDeDatoNormal;
-            
+            //string typeRempl = k.Contains("fecha")? reemplazoDeFecha:reemplazoDeDatoNormal;
+            string typeRempl = Const.parametrosFecha.Contains(k) ? reemplazoDeFecha:reemplazoDeDatoNormal;
 
             string loa=leerParam.Replace("parametro", k.Substring(1));
 
@@ -430,8 +470,8 @@ string GetQueryStringFormat(string queryentrante, string salida, string queryfin
         if (n.Length < 1)
             return "";
         
-        string typeRem = n.Contains("fecha")? reemplazoDeFecha: reemplazoDeDatoNormal;
-        
+        string typeRem = Const.parametrosFecha.Contains(n) ? reemplazoDeFecha : reemplazoDeDatoNormal;
+
         string lo = leerParam.Replace("parametro", n.Substring(1));
 
         queryfinal += buscar.Replace(n, typeRem);
@@ -452,21 +492,19 @@ string GetPalabra(string queryentrante)
     int prim = queryentrante.IndexOf("@");
     string g=queryentrante.Substring(prim);
 
-    int[] valores = new int[4]; 
 
-    valores[0]=g.IndexOf(" ");
-    valores[1] = g.IndexOf(".");
-    valores[2] = g.IndexOf(")");
-    valores[3] = g.IndexOf(",");
+    int[] valores = new int[Const.endParam.Length]; 
+
+    for (int i = 0; i < Const.endParam.Length; i++)
+        valores[i] = g.IndexOf(Const.endParam[i]);
+    
 
     List<string> param= new List<string>();
 
     foreach (var item in valores)
     {
         if (item >= 0)
-        {
             param.Add(queryentrante.Substring(prim, item));
-        }
     }
     string parametrofinal = "";
     foreach (var parametro in param)
@@ -477,12 +515,9 @@ string GetPalabra(string queryentrante)
             break;
         }
     }
+    
     if (!(parametrofinal.Length > 1))
-    {
-        string h = string.Join(",", param);
-        Console.WriteLine("=> NO HAY PARAMETRO ESTABLECIDO EN LAS CONSTANTES [ {0} ] <=", string.Join(",", param));
-
-    }
+        Console.WriteLine("=> NO HAY PARAMETRO ESTABLECIDO EN LAS CONSTANTES [ |{0}|-|{1}| ] <=", string.Join(",", param),g);
 
     return parametrofinal;
 }
@@ -569,3 +604,10 @@ string GetPalabra(string queryentrante)
         return valorEnrada.Split('-')[0];
     }
 
+    string GetKPISQuery(int num)
+{
+    string jc = "\r\n    //*********************************************** Potencia-KPIS-CALIDAD_RED-TYPE: 1 - Executed: <num> - Cod:000  - POTENCIA ***********************************************\r\n\r\n    rule \"Potencia-KPIS-CALIDAD_RED-type1Ex<num>\"\r\n    agenda-group \"KPIS\"\r\n        when\r\n            r: HashMap(\tget(\"client\") == (\"CALIDAD_RED\") && \r\n                        get(\"flow\") == \"potencia\" && \r\n                        get(\"type\") == \"1\" ) &&\r\n                        get(\"executedStep\") == \"<num>\" &&\r\n                        get(\"ack_code\") == \"000\")\r\n        then\t\t\r\n        \r\n        // Definiendo salida \r\n        \r\n        outParams.put(\"client\", \"CALIDAD_RED\");\r\n        outParams.put(\"steps\", getParam(\"<numP>\",\"<numP>.1|<numP>.2\"));\t\r\n        outParams.put(\"flow\", \"potencia\");\r\n        end\r\n\r\n    //*****************************************************************************************************************************\r\n";
+    jc = jc.Replace("<num>", num.ToString());
+    jc = jc.Replace("<numP>", (num+1).ToString());
+    return jc;
+}
