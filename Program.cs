@@ -35,22 +35,26 @@ string salir = "N";
 do
 {
     Console.Clear();
-    Console.WriteLine("Que deceas hacer [Y - salir]?\n\t1 - Generar Reglas\n\t2 - Generar Reglas con querys por un archivo .txt\n\t3 - Generar Reglas ejemplo\n\t4 - GenerarKPIS");
+    Console.WriteLine("Que deceas hacer [Y - salir]?\n\t1 - Generar reglas de archivo formateado\n\t" +
+        "2 - Generar formato\n\t3 - Generar reglas y formato\n\t4 - Generar KPIS\n\t5 - Generar cascaron de reglas");
     string op = Console.ReadLine().ToUpper();
-    var j = prop.MiLeyPrincipal;
+
     switch (op)
     {
         case "1":
-            generadorDeReglas();
-            break;
-        case "2":
             Prueba();
             break;
+        case "2":
+            getFormatTxt();
+            break;
         case "3":
-            Prueba2();
+            GenerarAll();
             break;
         case "4":
             KPISQuery();
+            break;
+        case "5":
+            generadorDeReglas();
             break;
         case "Y":
             salir = "Y";
@@ -61,14 +65,18 @@ do
     }
 } while (!salir.Equals("Y"));
 
+void GenerarAll()
+{
+    Prueba(getFormatTxt());
+}
+
 void KPISQuery()
 {
-    Console.WriteLine("Ingresa el numero de steps - :");
+    Console.WriteLine("Ingresa el rango  de steps - [0-2]: ");
     string num = Console.ReadLine();
     try
     {
-
-        for (int i = 0; i < int.Parse(num); i++)
+        for (int i = int.Parse(GetStep(num)); i < int.Parse(GetSubSteps(num)); i++)
         {
             Console.WriteLine( GetKPISQuery(i));
         }
@@ -82,132 +90,37 @@ void KPISQuery()
 
 }
 
-void Prueba2()
+
+void Prueba(string? rut="")
 {
     Console.Clear();
-
-    Console.Write("Ingresa los nombres del archivo separados por un \"|\"NOTA sin el \".txt\":  ");
-    string archivos = Console.ReadLine();
-
-    string[] ArregloDeArchivos = GetSubStepsPorPartes(archivos);
-
-
-    Console.Write("Ingresa la ruta: sonde se leera el .txt:  ");
-    string ruta = Console.ReadLine();
-
-    Console.Clear();
-    Console.Write("Escribe el tipo de flujo para la diferenciar la regla ejemplo  :");
-    string flujoDeRegla = Console.ReadLine();
-    string tipoDeFlujoParaCondicion;//= Console.ReadLine();
-
-    tipoDeFlujoParaCondicion = flujoDeRegla;
-
-    string jj = ruta + @"\ejemplo.txt";
-    Console.Clear();
-    StreamWriter d=File.CreateText(jj);
-    d.Close();
-    foreach (string archivo in ArregloDeArchivos)
+    string path = "";
+    string ruta = "";
+    string tipoEncabezado = "";
+    if (string.IsNullOrEmpty(rut))
     {
 
-    string tipoEncabezado = archivo;
-    tipoEncabezado = tipoEncabezado.ToUpper();
-    //archivo += ".txt";
+        Console.Write("Ingresa el nombre del archivo NOTA sin el  \".txt\":  ");
+        string archivo = Console.ReadLine();
+        tipoEncabezado = archivo.ToUpper();
 
-    string path = ruta.Replace(@"\\", @"\");
-    path += @"\" + archivo+".txt";
-    string fin = ruta + @"\" + flujoDeRegla + "_" + tipoEncabezado + ".txt";
+        archivo += ".txt";
 
+        Console.Write("Ruta a obtener archivo:  ");
+        ruta = Console.ReadLine();
 
-
-    try
+        path = ruta.Replace(@"\\", @"\");
+        path += @"\" + archivo;
+    }
+    else
     {
-        Console.Write("Leyendo archivo . . . .");
-        Thread.Sleep(2500);
-        Console.Clear();
 
-        using (Stream st = File.Open(jj, FileMode.Open, FileAccess.ReadWrite))
-        {
-
-                using (StreamWriter escri = new StreamWriter(st))
-                {
-                    //your code that needs StreamWriter
-
-                    escri.WriteLine(DivisorDeEncavezados.Replace(divEncabezado, tipoEncabezado));
-
-                    Console.Write("Creando archivo ");
-                    Thread.Sleep(1000);
-                    foreach (string line in System.IO.File.ReadLines(@path))
-                    {
-                        string[] Arreglo = GetSubStepsPorPartes(line);
-
-                        string salida = "";
-                        string queryfinal = "";
-                        concat = "";
-                        strucparaLeer = "";
-                        string queryConcatenado = "";
-                        //StringBuilder sb = new StringBuilder();
-                        string reglafin = "";
-
-                        if (!Arreglo[3].Contains(porcentaje))
-                        {
-                            queryConcatenado = GetQueryStringFormat(Arreglo[3], salida, queryfinal);
-                            reglafin = GetReglaFin(queryConcatenado.ToString(), concat);
-
-                        }
-                        else
-                        {
-                            queryConcatenado = GetQueryNormal(Arreglo[3], salida, queryfinal);
-
-                            reglafin = GetReglaFin(queryConcatenado.ToString(), null);
-                        }
-
-                        string regla = GerearRegla("",flujoDeRegla, tipoEncabezado, tipoDeFlujoParaCondicion, Arreglo[0], Arreglo[1], Arreglo[2], reglafin, strucparaLeer).Replace("\n", "\n    ");
-
-
-                        escri.WriteLine(regla + "\n");
-                        Console.Write(". ");
-                        Thread.Sleep(450);
-
-
-                    }
-                    escri.WriteLine("\n");
-                    escri.Close();
-                }
-                st.Close();
-        }
-
-        Console.Write("\n\nArchivo creado con exito . . .\n\r\r\tRUTA DEL ARCHIVO: " + fin);
-
-        Thread.Sleep(500);
+        string[] splits = rut.Split("\\");
+        path = rut;
+        string nomAr = splits[splits.Length - 1];
+        tipoEncabezado = nomAr.Split(".")[0].Split("_")[1];
+        ruta = rut.Substring(0, (rut.Length - (nomAr.Length+1)));
     }
-    catch (Exception ex)
-    {
-        Console.Clear();
-        Console.Write("No se pudo leer/encontrar el archivo: \nMensaje:\t" + ex.Message);
-        File.Delete(fin);
-    }
-
-    }
-
-}
-
-
-
-void Prueba()
-{
-    Console.Clear();
-
-    Console.Write("Ingresa el nombre del archivo NOTA sin el  \".txt\":  ");
-    string archivo = Console.ReadLine();
-    string tipoEncabezado = archivo.ToUpper();
-    
-    archivo += ".txt";
-
-    Console.Write("ruta a obtener archivo:  ");
-    string ruta = Console.ReadLine();
-
-    string path = ruta.Replace(@"\\", @"\");
-    path += @"\" + archivo;
 
     try
     {
@@ -221,23 +134,12 @@ void Prueba()
         Console.ReadKey();
         return;
     }
-
-    //Console.Write("Escribe el tipo de flujo para la diferenciar el nombre de la regla  :");
-    //string flujoDeRegla = Console.ReadLine();
-    //string tipoDeFlujoParaCondicion;//= Console.ReadLine();
-
-    //tipoDeFlujoParaCondicion = flujoDeRegla;
-
-    //Console.Clear();
-    //Console.Write("Escribe el nombre para diferenciar encabezado de la regla:");
-    //string tipoEncabezado = Console.ReadLine();
-
     Console.Clear();
-    Console.Write("Tipo de flujo \"(Equipos | Interfaces)\"... :");
+    Console.Write("Nombre de flujo: ");// \"(Equipos | Interfaces)\"...
     string tipoDeFlujoParaCondicion = Console.ReadLine();
     string flujoDeRegla = tipoDeFlujoParaCondicion;
 
-    Console.Write("Nombre del nogocio... :");
+    Console.Write("Nombre de nogocio: ");
     string negocio = Console.ReadLine();
 
     Console.Clear();
@@ -610,4 +512,89 @@ string GetPalabra(string queryentrante)
     jc = jc.Replace("<num>", num.ToString());
     jc = jc.Replace("<numP>", (num+1).ToString());
     return jc;
+}
+
+string getFormatTxt()
+{
+    Console.Clear();
+
+    Console.Write("Ingresa el nombre del archivo NOTA sin el  \".txt\":  ");
+    string archivo = Console.ReadLine();
+    string tipoEncabezado = archivo.ToUpper();
+
+    archivo += ".txt";
+
+    Console.Write("Ruta a obtener archivo:  ");
+    string ruta = Console.ReadLine();
+
+    string path = ruta.Replace(@"\\", @"\");
+    path += @"\" + archivo;
+
+    try
+    {
+        StreamReader sr = new StreamReader(@path);
+        sr.Close();
+    }
+    catch (Exception ex)
+    {
+
+        Console.WriteLine("No se encontro el archivo \nException:" + ex.Message);
+        Console.ReadKey();
+        return "";
+    }
+
+    string fin = ruta + @"\" + "format" + "_" + tipoEncabezado + ".txt";
+
+
+    try
+    {
+        Console.Write("Leyendo archivo . . . .");
+        Thread.Sleep(1500);
+        Console.Clear();
+        string All = "";
+
+        using (StreamWriter escri = File.CreateText(fin))
+        {
+            Console.Write("Creando archivo ...\n");
+            Thread.Sleep(1000);
+            int file = 0;
+
+            foreach (string line in System.IO.File.ReadLines(@path))
+            {
+                All += line.Replace("\n", " ") + " ";
+                file++;
+                Console.Write(". ");
+                Thread.Sleep(10);
+            }
+            Console.Clear();
+            Console.Write("Formateando ...\n");
+            for (int i = 1; i < file; i++)
+            {
+                string b = string.Format("{0}\t{1}.", i, i);
+                All = All.Replace(b, string.Format("\n{0}|{1}.", i, i));
+                Console.Write(". ");
+                Thread.Sleep(10);
+            }
+            All = All.Replace("\t", "|").Replace("\"", "");
+
+            escri.WriteLine(All);
+            escri.Close();
+        }
+
+        Console.Write("\n\nArchivo creado con exito . . .\n\r\r\tRUTA DEL ARCHIVO: " + fin);
+        Console.ReadKey();
+        Process.Start(new ProcessStartInfo { FileName = @fin, UseShellExecute = true });
+        Thread.Sleep(500);
+    }
+    catch (Exception ex)
+    {
+        Console.Clear();
+        Console.Write("Error:\t->:  " + ex.Message);
+        Console.ReadKey();
+        File.Delete(fin);
+    }
+
+    return fin;
+
+
 }
