@@ -36,7 +36,7 @@ do
 {
     Console.Clear();
     Console.WriteLine("Que deceas hacer [Y - salir]?\n\t1 - Generar reglas de archivo formateado\n\t" +
-        "2 - Generar formato\n\t3 - Generar reglas y formato\n\t4 - Generar KPIS\n\t5 - Generar cascaron de reglas");
+        "2 - Generar formato\n\t3 - Generar formato y reglas\n\t4 - Generar KPIS (NO dinamico)\n\t5 - Generar cascaron de reglas");
     string op = Console.ReadLine().ToUpper();
 
     switch (op)
@@ -58,6 +58,9 @@ do
             break;
         case "Y":
             salir = "Y";
+            Console.Clear();
+            Console.WriteLine("Adios .... ");
+            Console.ReadKey();
             break;
         default:
 
@@ -77,16 +80,14 @@ void KPISQuery()
     try
     {
         for (int i = int.Parse(GetStep(num)); i < int.Parse(GetSubSteps(num)); i++)
-        {
             Console.WriteLine( GetKPISQuery(i));
-        }
-        Console.ReadKey();
+        
     }
-    catch (Exception)
+    catch (Exception ex)
     {
-
-        throw;
+        Console.WriteLine(ex.Message);
     }
+        Console.ReadKey();
 
 }
 
@@ -235,7 +236,7 @@ void Prueba(string? rut="")
             escri.WriteLine("\n");
         }
 
-        Console.Write("\n\nArchivo creado con exito . . .\n\r\r\tRUTA DEL ARCHIVO: " + fin);
+        Console.Write("\nArchivo creado con exito . . .\n\tRUTA DEL ARCHIVO: " + fin);
         Console.ReadKey();
         Process.Start(new ProcessStartInfo { FileName = @fin, UseShellExecute = true });
         Thread.Sleep(500);
@@ -253,9 +254,7 @@ void Prueba(string? rut="")
 
 string getTypeSQL(string Query)
 {
-    int h = Query.IndexOf(" ");
-    string SQL = Query.Substring(0, h).ToUpper();
-
+    string SQL = Query.Substring(0, Query.IndexOf(" ")).ToUpper();
 
     string ret="";
 
@@ -425,40 +424,42 @@ string GetPalabra(string queryentrante)
 }
 
     void generadorDeReglas()
+{
+
+    string valorEnrada = "N";
+    do
     {
-
-        string valorEnrada="N";
-        do
-        {
         Console.Clear();
-            Console.WriteLine("ingresa los Step y SubStep como se muestra en el siguiente ejemplo \"1-1.1|1.2|1.3\" [Y - SALIR]");
-            valorEnrada = Console.ReadLine().ToUpper();
-            
-                try
-                {
-                    string Step;
-                    string[] ArregloSteps;
-                    Step = GetStep(valorEnrada);
-                    ArregloSteps = GetSubStepsPorPartes(GetSubSteps(valorEnrada));
+        Console.WriteLine("ingresa los Step y SubStep como se muestra en el siguiente ejemplo \"1-1.1|1.2|1.3\" [Y - SALIR]");
+        valorEnrada = Console.ReadLine().ToUpper();
 
-                    foreach (var item in ArregloSteps)
-                    {
+        try
+        {
+            if (valorEnrada.Equals("Y")) return;
 
-                        Console.WriteLine(GerearRegla("", "", "", "", Step, item, "", "", "") + "\n");
+            string Step;
+            string[] ArregloSteps;
+            Step = GetStep(valorEnrada);
+            ArregloSteps = GetSubStepsPorPartes(GetSubSteps(valorEnrada));
 
-                    }
+            foreach (var item in ArregloSteps)
+            {
 
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Intenta de nuevo Error:"+ex.Message);
-                    Console.ReadKey();
-                    Console.Clear();
+                Console.WriteLine(GerearRegla("", "", "", "", Step, item, "", "", "") + "\n");
 
-                }
-            
-        } while (valorEnrada != "Y");
-    }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Intenta de nuevo Error:" + ex.Message);
+
+        }
+            Console.ReadKey();
+            Console.Clear();
+
+    } while (valorEnrada != "Y");
+}
 
     string GerearRegla(string Negocio,string flujoDeRegla, string tipoEncabezado, string tipoDeFlujoParaCondicion, string step, string subStep, string typeSql, string reglafin, string strucparaLeer)
     {
