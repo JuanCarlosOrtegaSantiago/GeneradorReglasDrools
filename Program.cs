@@ -1,6 +1,11 @@
 ﻿//constantes para reemplazar
 using GeneradorReglasDrools;
 using System.Diagnostics;
+using System;
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.IO;
 
 string reemplazarTipoEncabezado = "*tipoEncabezado";
 string reemplazarSubStep = "*subStep";
@@ -32,39 +37,49 @@ string strucparaLeer = "";
 //String divvisor de encabezados
 string DivisorDeEncavezados = "\n//#################################################################################################################################################\r\n//################################################### @divisionDeEncabezado #########################################################################\r\n//#################################################################################################################################################\n\n\n";
 string salir = "N";
+
 do
 {
-    Console.Clear();
-    Console.WriteLine("Que deceas hacer [Y - salir]?\n\t1 - Generar reglas de archivo formateado\n\t" +
-        "2 - Generar formato\n\t3 - Generar formato y reglas\n\t4 - Generar KPIS (NO dinamico)\n\t5 - Generar cascaron de reglas");
-    string op = Console.ReadLine().ToUpper();
-
-    switch (op)
+    try
     {
-        case "1":
-            Prueba();
-            break;
-        case "2":
-            getFormatTxt();
-            break;
-        case "3":
-            GenerarAll();
-            break;
-        case "4":
-            KPISQuery();
-            break;
-        case "5":
-            generadorDeReglas();
-            break;
-        case "Y":
-            salir = "Y";
-            Console.Clear();
-            Console.WriteLine("Adios .... ");
-            Console.ReadKey();
-            break;
-        default:
+         
+        Console.Clear();
+        Console.WriteLine("Que deceas hacer [Y - salir]?\n\t1 - Generar reglas de archivo formateado\n\t" +
+            "2 - Generar formato\n\t3 - Generar formato y reglas\n\t4 - Generar KPIS (NO dinamico)\n\t5 - Generar cascaron de reglas");
+        string op = Console.ReadLine().ToUpper();
 
-            break;
+        switch (op)
+        {
+            case "1":
+                Prueba();
+                break;
+            case "2":
+                getFormatTxt();
+                break;
+            case "3":
+                GenerarAll();
+                break;
+            case "4":
+                KPISQuery();
+                break;
+            case "5":
+                generadorDeReglas();
+                break;
+            case "Y":
+                salir = "Y";
+                Console.Clear();
+                Console.WriteLine("Adios .... ");
+                Console.ReadKey();
+                break;
+            default:
+
+                break;
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Error ->\t" + ex.Message);
+        Console.ReadKey();
     }
 } while (!salir.Equals("Y"));
 
@@ -100,28 +115,17 @@ void Prueba(string? rut="")
     string tipoEncabezado = "";
     if (string.IsNullOrEmpty(rut))
     {
-
-        Console.Write("Ingresa el nombre del archivo NOTA sin el  \".txt\":  ");
-        string archivo = Console.ReadLine();
-        tipoEncabezado = archivo.ToUpper();
-
-        archivo += ".txt";
-
-        Console.Write("Ruta a obtener archivo:  ");
+        Console.Write("Ingresa la ruta y nombre del archivo \"C:\\drools\\5 minutos.txt\":  ");
         ruta = Console.ReadLine();
-
         path = ruta.Replace(@"\\", @"\");
-        path += @"\" + archivo;
     }
     else
     {
-
-        string[] splits = rut.Split("\\");
         path = rut;
-        string nomAr = splits[splits.Length - 1];
-        tipoEncabezado = nomAr.Split(".")[0].Split("_")[1];
-        ruta = rut.Substring(0, (rut.Length - (nomAr.Length+1)));
     }
+
+        ruta = Splitphat(path,rut)[0]; 
+        tipoEncabezado = Splitphat(path,rut)[1]; 
 
     try
     {
@@ -250,6 +254,17 @@ void Prueba(string? rut="")
     }
 
 
+}
+
+string[] Splitphat(string path, string? rut)
+{
+    string[] splits = path.Split("\\");
+    string nomAr = splits[splits.Length - 1];
+    string[] split= {
+    path.Substring(0, (path.Length - (nomAr.Length + 1))),
+    string.IsNullOrWhiteSpace(rut) ? nomAr.Split(".")[0] : nomAr.Split(".")[0].Split("_")[1]};
+
+    return split;
 }
 
 string getTypeSQL(string Query)
@@ -518,18 +533,15 @@ string GetPalabra(string queryentrante)
 string getFormatTxt()
 {
     Console.Clear();
+    string ruta;
+    string tipoEncabezado;
+    Console.Write("Ingresa la ruta y nombre del archivo \"C:\\drools\\5 minutos.txt\":  ");
 
-    Console.Write("Ingresa el nombre del archivo NOTA sin el  \".txt\":  ");
-    string archivo = Console.ReadLine();
-    string tipoEncabezado = archivo.ToUpper();
-
-    archivo += ".txt";
-
-    Console.Write("Ruta a obtener archivo:  ");
-    string ruta = Console.ReadLine();
-
+    ruta = Console.ReadLine();
     string path = ruta.Replace(@"\\", @"\");
-    path += @"\" + archivo;
+
+    ruta = Splitphat(path, "")[0];
+    tipoEncabezado = Splitphat(path, "")[1];
 
     try
     {
