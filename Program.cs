@@ -1,11 +1,10 @@
 ﻿//constantes para reemplazar
 using GeneradorReglasDrools;
 using System.Diagnostics;
-using System;
-using System.Configuration;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.IO;
+using Serilog;
+using Serilog.Events;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Hosting;
 
 string reemplazarTipoEncabezado = "*tipoEncabezado";
 string reemplazarSubStep = "*subStep";
@@ -38,12 +37,24 @@ string strucparaLeer = "";
 string DivisorDeEncavezados = "\n//#################################################################################################################################################\r\n//################################################### @divisionDeEncabezado #########################################################################\r\n//#################################################################################################################################################\n\n\n";
 string salir = "N";
 
+CreateHostBuilder(args).Build().Run();
+
+using (var log = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateLogger())
+{
+    log.Information("Hello, Serilog!");
+    log.Warning("Goodbye, Serilog.");
+}
+
+
 do
 {
     try
     {
          
         Console.Clear();
+        Log.Information("Ejemplo");
         Console.WriteLine("Que deceas hacer [Y - salir]?\n\t1 - Generar reglas de archivo formateado\n\t" +
             "2 - Generar formato\n\t3 - Generar formato y reglas\n\t4 - Generar KPIS (NO dinamico)\n\t5 - Generar cascaron de reglas");
         string op = Console.ReadLine().ToUpper();
@@ -82,6 +93,20 @@ do
         Console.ReadKey();
     }
 } while (!salir.Equals("Y"));
+
+
+
+static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .UseSerilog((hostingContext, loggerConfiguration) =>
+            {
+                loggerConfiguration
+                    .MinimumLevel.Debug()
+                    .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Information)
+                    .Enrich.FromLogContext()
+                    .WriteTo.Console()
+                    .WriteTo.File(AppContext.BaseDirectory + "log.txt", rollingInterval: RollingInterval.Day); // Configuración del archivo
+            });
 
 void GenerarAll()
 {
@@ -576,8 +601,6 @@ string getFormatTxt()
             {
                 All += line.Replace("\n", " ") + " ";
                 file++;
-                Console.Write(". ");
-                Thread.Sleep(10);
             }
             Console.Clear();
             Console.Write("Formateando ...\n");
@@ -586,7 +609,7 @@ string getFormatTxt()
                 string b = string.Format("{0}\t{1}.", i, i);
                 All = All.Replace(b, string.Format("\n{0}|{1}.", i, i));
                 Console.Write(". ");
-                Thread.Sleep(10);
+                Thread.Sleep(5);
             }
             All = All.Replace("\t", "|").Replace("\"", "");
 
